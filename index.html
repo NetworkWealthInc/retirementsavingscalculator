@@ -263,7 +263,7 @@ function formatCurrency(value) {
 }
 
 
-        function createCashFlowChart(retirementSavings, retirementAge) {
+    function createCashFlowChart(retirementSavings, retirementAge) {
             const labels = [];
             const cashFlowData = [];
             const yearsToWithdraw = 100 - retirementAge;
@@ -308,9 +308,9 @@ function formatCurrency(value) {
                     }
                 }
             });
-        }
+    }
 
-       function createGrowthTable(data) {
+    function createGrowthTable(data) {
             const table = document.getElementById('growthTable');
             table.innerHTML = '<tr><th>Age</th><th>Retirement Savings Value</th></tr>';
             data.forEach(item => {
@@ -323,12 +323,13 @@ function formatCurrency(value) {
                 row.appendChild(valueCell);
                 table.appendChild(row);
             });
-        }
+    }
 
-        function goBack() {
+    function goBack() {
             document.getElementById('calculator').classList.add('active');
             document.getElementById('resultPage').classList.remove('active');
-        }
+     }
+        
     </script>
 </body>
 </html>
