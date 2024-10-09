@@ -52,6 +52,26 @@
         canvas {
             margin-top: 20px;
         }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        table, th, td {
+            border: 1px solid #40A7DD;
+        }
+
+        th, td {
+            padding: 10px;
+            text-align: center;
+        }
+
+        th {
+            background-color: #40A7DD;
+            color: white;
+        }
     </style>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
@@ -83,6 +103,7 @@
         <h1>Your Estimated Retirement Savings</h1>
         <div class="result" id="result"></div>
         <canvas id="growthChart"></canvas>
+        <table id="growthTable"></table>
         <button onclick="goBack()">Back</button>
     </div>
 
@@ -108,11 +129,19 @@
             const yearsToRetirement = retirementAge - currentAge;
             const monthsToRetirement = yearsToRetirement * 12;
 
-            // Calculate future value of current savings and prepare data for chart
+            // Calculate future value of current savings and prepare data for chart and table
             let futureValue = currentSavings;
             const chartData = [];
+            const tableData = [];
+
             for (let i = 0; i <= monthsToRetirement; i++) {
                 chartData.push(futureValue);
+                if (i % 12 === 0) { // Capture data for each year
+                    tableData.push({
+                        year: currentAge + Math.floor(i / 12),
+                        value: futureValue
+                    });
+                }
                 futureValue += monthlyContribution;
                 futureValue += futureValue * (annualRate / 12);  // Compounding monthly
             }
@@ -122,6 +151,8 @@
 
             // Create chart
             createGrowthChart(chartData, currentAge, retirementAge);
+            // Create table
+            createGrowthTable(tableData);
 
             // Show result and hide the form
             document.getElementById('calculator').classList.remove('active');
@@ -169,6 +200,33 @@
                         }
                     }
                 }
+            });
+        }
+
+        function createGrowthTable(tableData) {
+            const table = document.getElementById('growthTable');
+            table.innerHTML = ''; // Clear previous table data
+
+            // Create table headers
+            const headerRow = document.createElement('tr');
+            const yearHeader = document.createElement('th');
+            yearHeader.innerText = 'Year';
+            const valueHeader = document.createElement('th');
+            valueHeader.innerText = 'Value ($)';
+            headerRow.appendChild(yearHeader);
+            headerRow.appendChild(valueHeader);
+            table.appendChild(headerRow);
+
+            // Create table rows
+            tableData.forEach(item => {
+                const row = document.createElement('tr');
+                const yearCell = document.createElement('td');
+                yearCell.innerText = item.year;
+                const valueCell = document.createElement('td');
+                valueCell.innerText = item.value.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+                row.appendChild(yearCell);
+                row.appendChild(valueCell);
+                table.appendChild(row);
             });
         }
 
