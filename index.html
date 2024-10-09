@@ -259,22 +259,22 @@
 
             // Create table headers
             const headerRow = document.createElement('tr');
-            const yearHeader = document.createElement('th');
-            yearHeader.innerText = 'Year';
+            const ageHeader = document.createElement('th');
+            ageHeader.innerText = 'Age';
             const valueHeader = document.createElement('th');
-            valueHeader.innerText = 'Value ($)';
-            headerRow.appendChild(yearHeader);
+            valueHeader.innerText = 'Retirement Savings Value';
+            headerRow.appendChild(ageHeader);
             headerRow.appendChild(valueHeader);
             table.appendChild(headerRow);
 
             // Create table rows
             tableData.forEach(item => {
                 const row = document.createElement('tr');
-                const yearCell = document.createElement('td');
-                yearCell.innerText = item.year;
+                const ageCell = document.createElement('td');
+                ageCell.innerText = item.year;
                 const valueCell = document.createElement('td');
-                valueCell.innerText = item.value.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-                row.appendChild(yearCell);
+                valueCell.innerText = `$${item.value.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`;
+                row.appendChild(ageCell);
                 row.appendChild(valueCell);
                 table.appendChild(row);
             });
