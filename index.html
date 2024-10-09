@@ -186,15 +186,15 @@
     document.getElementById('resultPage').classList.add('active');
 }
 
-       function createGrowthChart(chartData, currentAge, retirementAge) {
+      function createGrowthChart(chartData, currentAge, retirementAge) {
     const labels = [];
     for (let i = currentAge; i <= retirementAge; i++) {
-        labels.push(i); // Label only by age, one per year
+        labels.push(i);
     }
 
     const ctx = document.getElementById('growthChart').getContext('2d');
     if (growthChart) {
-        growthChart.destroy(); // Destroy the previous chart instance if it exists
+        growthChart.destroy();
     }
 
     growthChart = new Chart(ctx, {
@@ -224,6 +224,16 @@
         },
         options: {
             responsive: true,
+            plugins: {
+                tooltip: {
+                    callbacks: {
+                        label: function (tooltipItem) {
+                            const value = tooltipItem.raw;
+                            return `$${value.toFixed(2)}`;
+                        }
+                    }
+                }
+            },
             scales: {
                 y: {
                     beginAtZero: true,
