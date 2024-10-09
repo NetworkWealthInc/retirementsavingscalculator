@@ -310,35 +310,20 @@ function formatCurrency(value) {
             });
         }
 
-        function createGrowthTable(data) {
-    const table = document.getElementById('growthTable');
-    // Update the table header to include the Year column
-    table.innerHTML = '<tr><th>Year</th><th>Age</th><th>Retirement Savings Value</th></tr>';
-    
-    data.forEach(item => {
-        const row = document.createElement('tr');
-        
-        // Create cell for Year
-        const yearCell = document.createElement('td');
-        yearCell.innerText = item.year;
-
-        // Create cell for Age
-        const ageCell = document.createElement('td');
-        ageCell.innerText = item.age;
-
-        // Create cell for Retirement Savings Value
-        const valueCell = document.createElement('td');
-        valueCell.innerText = `$${item.value.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`;
-
-        // Append cells to the row
-        row.appendChild(yearCell);
-        row.appendChild(ageCell);
-        row.appendChild(valueCell);
-        
-        // Append the row to the table
-        table.appendChild(row);
-    });
-}
+       function createGrowthTable(data) {
+            const table = document.getElementById('growthTable');
+            table.innerHTML = '<tr><th>Age</th><th>Retirement Savings Value</th></tr>';
+            data.forEach(item => {
+                const row = document.createElement('tr');
+                const ageCell = document.createElement('td');
+                ageCell.innerText = item.year;
+                const valueCell = document.createElement('td');
+                valueCell.innerText = $${item.value.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")};
+                row.appendChild(ageCell);
+                row.appendChild(valueCell);
+                table.appendChild(row);
+            });
+        }
 
         function goBack() {
             document.getElementById('calculator').classList.add('active');
