@@ -116,9 +116,6 @@
 
     <script>
        
-        function formatCurrency(value) {
-    return `$${value.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`;
-}
         let growthChart, cashFlowChart;
 
        function calculateAndShowResult() {
@@ -190,10 +187,13 @@
     document.getElementById('resultPage').classList.add('active');
 }
 
-      function createGrowthChart(chartData, currentAge, retirementAge) {
+     function createGrowthChart(chartData, currentAge, retirementAge) {
     const labels = [];
+    const currentYear = new Date().getFullYear();
+
     for (let i = currentAge; i <= retirementAge; i++) {
-        labels.push(i);
+        const year = currentYear + (i - currentAge);  // Calculate the corresponding year
+        labels.push(`${i} (${year})`);  // Display both age and year
     }
 
     const ctx = document.getElementById('growthChart').getContext('2d');
@@ -233,7 +233,7 @@
                     callbacks: {
                         label: function (tooltipItem) {
                             const value = tooltipItem.raw;
-                            return formatCurrency(value);
+                            return formatCurrency(value);  // Format with dollar sign and commas
                         }
                     }
                 }
@@ -249,7 +249,7 @@
                 x: {
                     title: {
                         display: true,
-                        text: 'Age',
+                        text: 'Age (Year)',  // Update x-axis title
                     }
                 },
                 stacked: true,
@@ -257,6 +257,11 @@
         }
     });
 }
+
+function formatCurrency(value) {
+    return `$${value.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`;
+}
+
 
         function createCashFlowChart(retirementSavings, retirementAge) {
             const labels = [];
