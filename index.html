@@ -342,10 +342,13 @@ function formatCurrency(value) {
             doc.text('Retirement Savings Estimate', 10, 10);
             doc.setFontSize(12);
             doc.text(resultText, 10, 30);
-            doc.text('Growth Chart and Cash Flow Chart:', 10, 50);
+            doc.text('Retirement Savings', 10, 50);
 
             doc.addImage(growthChart.toBase64Image(), 'JPEG', 25, 60, 140, 60);
+            doc.text('Pre-Tax Cash Flow', 10, 130); 
             doc.addImage(cashFlowChart.toBase64Image(), 'JPEG', 25, 140, 140, 60);
+
+            
 
             doc.save('retirement_savings_estimate.pdf');
         }
