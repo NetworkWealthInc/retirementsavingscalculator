@@ -4,121 +4,54 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Retirement Savings Calculator</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-        }
-
-        .calculator, .result-page {
-            max-width: 500px;
-            margin: 0 auto;
-            display: none;
-        }
-
-        .active {
-            display: block;
-        }
-
-        label, input {
-            display: block;
-            margin: 10px 0;
-        }
-
-        input {
-            padding: 10px;
-            width: 100%;
-        }
-
-        button {
-            padding: 10px 20px;
-            background-color: #40A7DD;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 16px;
-        }
-
-        button:hover {
-            background-color: #007bff;
-        }
-
-        .result {
-            margin-top: 20px;
-            font-size: 18px;
-        }
-
-        canvas {
-            margin-top: 20px;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-        }
-
-        table, th, td {
-            border: 1px solid #40A7DD;
-        }
-
-        th, td {
-            padding: 10px;
-            text-align: center;
-        }
-
-        th {
-            background-color: #40A7DD;
-            color: white;
-        }
-    </style>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        /* Add necessary styling */
+    </style>
 </head>
 <body>
-    <!-- Input Form -->
-    <div class="calculator active" id="calculator">
+    <div id="calculator" class="active">
         <h1>Retirement Savings Calculator</h1>
+        <form onsubmit="event.preventDefault(); calculateAndShowResult();">
+            <label for="current-age">Current Age:</label>
+            <input type="number" id="current-age" required><br><br>
 
-        <label for="current-age">Current Age</label>
-        <input type="number" id="current-age" min="0" max="100">
+            <label for="retirement-age">Retirement Age:</label>
+            <input type="number" id="retirement-age" required><br><br>
 
-        <label for="retirement-age">Desired Retirement Age</label>
-        <input type="number" id="retirement-age" min="0" max="100">
+            <!-- Split savings input fields -->
+            <label for="registered-savings">Registered Retirement Savings:</label>
+            <input type="number" id="registered-savings" required><br><br>
 
-        <label for="registered-savings">Registered Retirement Savings ($)</label>
-        <input type="number" id="registered-savings" min="0">
+            <label for="tfsa-savings">Tax-Free Savings Accounts (TFSAs):</label>
+            <input type="number" id="tfsa-savings" required><br><br>
 
-        <label for="tfsa-savings">Tax-Free Savings Accounts (TFSAs) ($)</label>
-        <input type="number" id="tfsa-savings" min="0">
+            <label for="non-registered-savings">Non-Registered Savings and Investments:</label>
+            <input type="number" id="non-registered-savings" required><br><br>
 
-        <label for="non-registered-savings">Non-Registered Savings and Investments ($)</label>
-        <input type="number" id="non-registered-savings" min="0">
+            <label for="monthly-contribution">Monthly Contribution:</label>
+            <input type="number" id="monthly-contribution" required><br><br>
 
-        <label for="monthly-contribution">Monthly Savings ($)</label>
-        <input type="number" id="monthly-contribution" min="0">
+            <label for="annual-rate">Annual Rate of Return (%):</label>
+            <input type="number" id="annual-rate" required><br><br>
 
-        <label for="annual-rate">Expected Annual Rate of Return (%)</label>
-        <input type="number" id="annual-rate" step="0.01" min="0">
-
-        <button onclick="calculateAndShowResult()">Calculate</button>
+            <button type="submit" style="background-color: #40A7DD; border-radius: 10px;">Calculate</button>
+        </form>
     </div>
 
-    <!-- Result Page -->
-    <div class="result-page" id="resultPage">
-        <h1>Your Estimated Retirement Savings</h1>
-        <div class="result" id="result"></div>
+    <div id="resultPage" class="hidden">
+        <h2>Results</h2>
+        <p id="result"></p>
         <canvas id="growthChart"></canvas>
-        <canvas id="cashFlowChart"></canvas>
         <table id="growthTable"></table>
         <button onclick="goBack()">Back</button>
     </div>
 
     <script>
-        let growthChart, cashFlowChart;
+        let growthChart;
 
+        // Replace calculateAndShowResult with the updated one
         function calculateAndShowResult() {
-            // Get user inputs
             const currentAge = parseInt(document.getElementById('current-age').value);
             const retirementAge = parseInt(document.getElementById('retirement-age').value);
             const registeredSavings = parseFloat(document.getElementById('registered-savings').value) || 0;
@@ -127,18 +60,14 @@
             const monthlyContribution = parseFloat(document.getElementById('monthly-contribution').value);
             const annualRate = parseFloat(document.getElementById('annual-rate').value) / 100;
 
-            // Validate inputs
             if (isNaN(currentAge) || isNaN(retirementAge) || isNaN(monthlyContribution) ||
                 isNaN(annualRate) || currentAge >= retirementAge) {
                 alert('Please enter valid values.');
                 return;
             }
 
-            // Calculate years to retirement
             const yearsToRetirement = retirementAge - currentAge;
-            const monthsToRetirement = yearsToRetirement * 12;
 
-            // Calculate future value of savings and prepare data for chart and table
             const chartData = {
                 registered: [],
                 tfsa: [],
@@ -149,55 +78,46 @@
             let futureValueTFSA = tfsaSavings;
             let futureValueNonRegistered = nonRegisteredSavings;
 
-            for (let i = 0; i <= monthsToRetirement; i++) {
-                // Compound monthly for each account type
-                futureValueRegistered += (monthlyContribution / 3); // Split contribution equally
-                futureValueTFSA += (monthlyContribution / 3);
-                futureValueNonRegistered += (monthlyContribution / 3);
+            for (let i = 0; i <= yearsToRetirement; i++) {
+                futureValueRegistered += (monthlyContribution * 12) / 3;
+                futureValueTFSA += (monthlyContribution * 12) / 3;
+                futureValueNonRegistered += (monthlyContribution * 12) / 3;
 
-                futureValueRegistered += futureValueRegistered * (annualRate / 12);  
-                futureValueTFSA += futureValueTFSA * (annualRate / 12);  
-                futureValueNonRegistered += futureValueNonRegistered * (annualRate / 12);  
+                futureValueRegistered += futureValueRegistered * annualRate;
+                futureValueTFSA += futureValueTFSA * annualRate;
+                futureValueNonRegistered += futureValueNonRegistered * annualRate;
 
-                // Push values to chart data
                 chartData.registered.push(futureValueRegistered);
                 chartData.tfsa.push(futureValueTFSA);
                 chartData.nonRegistered.push(futureValueNonRegistered);
 
-                // Capture data for the table every year
-                if (i % 12 === 0) {
-                    tableData.push({
-                        year: currentAge + Math.floor(i / 12),
-                        value: futureValueRegistered + futureValueTFSA + futureValueNonRegistered
-                    });
-                }
+                tableData.push({
+                    year: currentAge + i,
+                    value: futureValueRegistered + futureValueTFSA + futureValueNonRegistered
+                });
             }
 
-            // Format future value with commas and show result
             const totalFutureValue = futureValueRegistered + futureValueTFSA + futureValueNonRegistered;
             document.getElementById('result').innerHTML = `Your estimated savings at retirement: $${totalFutureValue.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`;
 
-            // Create growth chart
             createGrowthChart(chartData, currentAge, retirementAge);
-            // Create table
             createGrowthTable(tableData);
-            // Create cash flow chart
             createCashFlowChart(totalFutureValue, retirementAge);
 
-            // Show result and hide the form
             document.getElementById('calculator').classList.remove('active');
             document.getElementById('resultPage').classList.add('active');
         }
 
+        // Replace createGrowthChart with the updated one
         function createGrowthChart(chartData, currentAge, retirementAge) {
             const labels = [];
-            for (let i = 0; i <= chartData.registered.length - 1; i++) {
-                labels.push(currentAge + Math.floor(i / 12));
+            for (let i = currentAge; i <= retirementAge; i++) {
+                labels.push(i);
             }
 
             const ctx = document.getElementById('growthChart').getContext('2d');
             if (growthChart) {
-                growthChart.destroy(); // Destroy the previous chart instance if it exists
+                growthChart.destroy();
             }
 
             growthChart = new Chart(ctx, {
@@ -243,53 +163,6 @@
                         },
                         stacked: true,
                     },
-                }
-            });
-        }
-
-        function createCashFlowChart(retirementSavings, retirementAge) {
-            const labels = [];
-            const cashFlowData = [];
-            const yearsToWithdraw = 100 - retirementAge;
-            const annualWithdrawal = retirementSavings / yearsToWithdraw;
-
-            for (let i = 0; i <= yearsToWithdraw; i++) {
-                labels.push(retirementAge + i);
-                cashFlowData.push(annualWithdrawal);
-            }
-
-            const ctx = document.getElementById('cashFlowChart').getContext('2d');
-            if (cashFlowChart) {
-                cashFlowChart.destroy(); // Destroy the previous chart instance if it exists
-            }
-
-            cashFlowChart = new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: labels,
-                    datasets: [{
-                        label: 'Annual Pre-Tax Cash Flow',
-                        data: cashFlowData,
-                        backgroundColor: '#40A7DD',
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            title: {
-                                display: true,
-                                text: 'Amount ($)',
-                            }
-                        },
-                        x: {
-                            title: {
-                                display: true,
-                                text: 'Age',
-                            }
-                        }
-                    }
                 }
             });
         }
