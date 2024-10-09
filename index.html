@@ -103,12 +103,13 @@
         <h1>Your Estimated Retirement Savings</h1>
         <div class="result" id="result"></div>
         <canvas id="growthChart"></canvas>
+        <canvas id="cashFlowChart"></canvas>
         <table id="growthTable"></table>
         <button onclick="goBack()">Back</button>
     </div>
 
     <script>
-        let growthChart;
+        let growthChart, cashFlowChart;
 
         function calculateAndShowResult() {
             // Get user inputs
@@ -149,10 +150,12 @@
             // Format future value with commas and show result
             document.getElementById('result').innerHTML = `Your estimated savings at retirement: $${futureValue.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`;
 
-            // Create chart
+            // Create growth chart
             createGrowthChart(chartData, currentAge, retirementAge);
             // Create table
             createGrowthTable(tableData);
+            // Create cash flow chart
+            createCashFlowChart(futureValue, retirementAge);
 
             // Show result and hide the form
             document.getElementById('calculator').classList.remove('active');
@@ -180,6 +183,53 @@
                         borderColor: '#40A7DD',
                         backgroundColor: 'rgba(64, 167, 221, 0.2)',
                         fill: true,
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Amount ($)',
+                            }
+                        },
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Age',
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function createCashFlowChart(retirementSavings, retirementAge) {
+            const labels = [];
+            const cashFlowData = [];
+            const yearsToWithdraw = 100 - retirementAge;
+            const annualWithdrawal = retirementSavings / yearsToWithdraw;
+
+            for (let i = 0; i <= yearsToWithdraw; i++) {
+                labels.push(retirementAge + i);
+                cashFlowData.push(annualWithdrawal);
+            }
+
+            const ctx = document.getElementById('cashFlowChart').getContext('2d');
+            if (cashFlowChart) {
+                cashFlowChart.destroy(); // Destroy the previous chart instance if it exists
+            }
+
+            cashFlowChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Annual Pre-Tax Cash Flow',
+                        data: cashFlowData,
+                        backgroundColor: '#40A7DD',
                     }]
                 },
                 options: {
