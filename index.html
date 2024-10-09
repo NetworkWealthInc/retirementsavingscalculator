@@ -344,7 +344,7 @@ function formatCurrency(value) {
             doc.text(resultText, 10, 30);
             doc.text('Growth Chart and Cash Flow Chart:', 10, 50);
 
-            doc.addImage(growthChart.toBase64Image(), 'JPEG', 10, 60, 180, 100);
+            doc.addImage(growthChart.toBase64Image(), 'JPEG', 5, 40, 140, 60);
             doc.addImage(cashFlowChart.toBase64Image(), 'JPEG', 10, 170, 180, 100);
 
             doc.save('retirement_savings_estimate.pdf');
