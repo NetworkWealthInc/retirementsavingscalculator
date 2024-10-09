@@ -229,7 +229,7 @@
                     callbacks: {
                         label: function (tooltipItem) {
                             const value = tooltipItem.raw;
-                            return `$${value.toFixed(2)}`;
+                            return formatCurrency(value);
                         }
                     }
                 }
