@@ -139,31 +139,50 @@
             const monthsToRetirement = yearsToRetirement * 12;
 
             // Calculate future value of savings and prepare data for chart and table
-            let futureValue = registeredSavings + tfsaSavings + nonRegisteredSavings;
-            const chartData = [];
+            const chartData = {
+                registered: [],
+                tfsa: [],
+                nonRegistered: [],
+            };
             const tableData = [];
+            let futureValueRegistered = registeredSavings;
+            let futureValueTFSA = tfsaSavings;
+            let futureValueNonRegistered = nonRegisteredSavings;
 
             for (let i = 0; i <= monthsToRetirement; i++) {
-                chartData.push(futureValue);
-                if (i % 12 === 0) { // Capture data for each year
+                // Compound monthly for each account type
+                futureValueRegistered += (monthlyContribution / 3); // Split contribution equally
+                futureValueTFSA += (monthlyContribution / 3);
+                futureValueNonRegistered += (monthlyContribution / 3);
+
+                futureValueRegistered += futureValueRegistered * (annualRate / 12);  
+                futureValueTFSA += futureValueTFSA * (annualRate / 12);  
+                futureValueNonRegistered += futureValueNonRegistered * (annualRate / 12);  
+
+                // Push values to chart data
+                chartData.registered.push(futureValueRegistered);
+                chartData.tfsa.push(futureValueTFSA);
+                chartData.nonRegistered.push(futureValueNonRegistered);
+
+                // Capture data for the table every year
+                if (i % 12 === 0) {
                     tableData.push({
                         year: currentAge + Math.floor(i / 12),
-                        value: futureValue
+                        value: futureValueRegistered + futureValueTFSA + futureValueNonRegistered
                     });
                 }
-                futureValue += monthlyContribution;
-                futureValue += futureValue * (annualRate / 12);  // Compounding monthly
             }
 
             // Format future value with commas and show result
-            document.getElementById('result').innerHTML = `Your estimated savings at retirement: $${futureValue.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`;
+            const totalFutureValue = futureValueRegistered + futureValueTFSA + futureValueNonRegistered;
+            document.getElementById('result').innerHTML = `Your estimated savings at retirement: $${totalFutureValue.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`;
 
             // Create growth chart
             createGrowthChart(chartData, currentAge, retirementAge);
             // Create table
             createGrowthTable(tableData);
             // Create cash flow chart
-            createCashFlowChart(futureValue, retirementAge);
+            createCashFlowChart(totalFutureValue, retirementAge);
 
             // Show result and hide the form
             document.getElementById('calculator').classList.remove('active');
@@ -172,7 +191,7 @@
 
         function createGrowthChart(chartData, currentAge, retirementAge) {
             const labels = [];
-            for (let i = 0; i <= chartData.length - 1; i++) {
+            for (let i = 0; i <= chartData.registered.length - 1; i++) {
                 labels.push(currentAge + Math.floor(i / 12));
             }
 
@@ -182,16 +201,26 @@
             }
 
             growthChart = new Chart(ctx, {
-                type: 'line',
+                type: 'bar',
                 data: {
                     labels: labels,
-                    datasets: [{
-                        label: 'Savings Growth',
-                        data: chartData,
-                        borderColor: '#40A7DD',
-                        backgroundColor: 'rgba(64, 167, 221, 0.2)',
-                        fill: true,
-                    }]
+                    datasets: [
+                        {
+                            label: 'Registered Retirement Savings',
+                            data: chartData.registered,
+                            backgroundColor: '#40A7DD',
+                        },
+                        {
+                            label: 'Tax-Free Savings Accounts (TFSAs)',
+                            data: chartData.tfsa,
+                            backgroundColor: '#7CCBFF',
+                        },
+                        {
+                            label: 'Non-Registered Savings and Investments',
+                            data: chartData.nonRegistered,
+                            backgroundColor: '#A7D3E5',
+                        },
+                    ]
                 },
                 options: {
                     responsive: true,
@@ -261,22 +290,10 @@
             });
         }
 
-        function createGrowthTable(tableData) {
+        function createGrowthTable(data) {
             const table = document.getElementById('growthTable');
-            table.innerHTML = ''; // Clear previous table data
-
-            // Create table headers
-            const headerRow = document.createElement('tr');
-            const ageHeader = document.createElement('th');
-            ageHeader.innerText = 'Age';
-            const valueHeader = document.createElement('th');
-            valueHeader.innerText = 'Retirement Savings Value';
-            headerRow.appendChild(ageHeader);
-            headerRow.appendChild(valueHeader);
-            table.appendChild(headerRow);
-
-            // Create table rows
-            tableData.forEach(item => {
+            table.innerHTML = '<tr><th>Age</th><th>Retirement Savings Value</th></tr>';
+            data.forEach(item => {
                 const row = document.createElement('tr');
                 const ageCell = document.createElement('td');
                 ageCell.innerText = item.year;
