@@ -86,8 +86,14 @@
         <label for="retirement-age">Desired Retirement Age</label>
         <input type="number" id="retirement-age" min="0" max="100">
 
-        <label for="current-savings">Current Savings ($)</label>
-        <input type="number" id="current-savings" min="0">
+        <label for="registered-savings">Registered Retirement Savings ($)</label>
+        <input type="number" id="registered-savings" min="0">
+
+        <label for="tfsa-savings">Tax-Free Savings Accounts (TFSAs) ($)</label>
+        <input type="number" id="tfsa-savings" min="0">
+
+        <label for="non-registered-savings">Non-Registered Savings and Investments ($)</label>
+        <input type="number" id="non-registered-savings" min="0">
 
         <label for="monthly-contribution">Monthly Savings ($)</label>
         <input type="number" id="monthly-contribution" min="0">
@@ -115,13 +121,15 @@
             // Get user inputs
             const currentAge = parseInt(document.getElementById('current-age').value);
             const retirementAge = parseInt(document.getElementById('retirement-age').value);
-            const currentSavings = parseFloat(document.getElementById('current-savings').value);
+            const registeredSavings = parseFloat(document.getElementById('registered-savings').value) || 0;
+            const tfsaSavings = parseFloat(document.getElementById('tfsa-savings').value) || 0;
+            const nonRegisteredSavings = parseFloat(document.getElementById('non-registered-savings').value) || 0;
             const monthlyContribution = parseFloat(document.getElementById('monthly-contribution').value);
             const annualRate = parseFloat(document.getElementById('annual-rate').value) / 100;
 
             // Validate inputs
-            if (isNaN(currentAge) || isNaN(retirementAge) || isNaN(currentSavings) ||
-                isNaN(monthlyContribution) || isNaN(annualRate) || currentAge >= retirementAge) {
+            if (isNaN(currentAge) || isNaN(retirementAge) || isNaN(monthlyContribution) ||
+                isNaN(annualRate) || currentAge >= retirementAge) {
                 alert('Please enter valid values.');
                 return;
             }
@@ -130,8 +138,8 @@
             const yearsToRetirement = retirementAge - currentAge;
             const monthsToRetirement = yearsToRetirement * 12;
 
-            // Calculate future value of current savings and prepare data for chart and table
-            let futureValue = currentSavings;
+            // Calculate future value of savings and prepare data for chart and table
+            let futureValue = registeredSavings + tfsaSavings + nonRegisteredSavings;
             const chartData = [];
             const tableData = [];
 
@@ -281,9 +289,8 @@
         }
 
         function goBack() {
-            // Show the input form and hide the result page
-            document.getElementById('resultPage').classList.remove('active');
             document.getElementById('calculator').classList.add('active');
+            document.getElementById('resultPage').classList.remove('active');
         }
     </script>
 </body>
