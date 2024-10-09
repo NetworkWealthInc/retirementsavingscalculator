@@ -74,6 +74,7 @@
         }
     </style>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </head>
 <body>
     <!-- Input Form -->
@@ -112,6 +113,7 @@
         <canvas id="cashFlowChart"></canvas>
         <table id="growthTable"></table>
         <button onclick="goBack()">Back</button>
+        <button onclick="saveAsPDF()">Save as PDF</button>
     </div>
 
     <script>
@@ -329,6 +331,24 @@ function formatCurrency(value) {
             document.getElementById('calculator').classList.add('active');
             document.getElementById('resultPage').classList.remove('active');
      }
+
+         async function saveAsPDF() {
+            const { jsPDF } = window.jspdf;
+
+            const doc = new jsPDF();
+            const resultText = document.getElementById('result').innerHTML;
+
+            doc.setFontSize(20);
+            doc.text('Retirement Savings Estimate', 10, 10);
+            doc.setFontSize(12);
+            doc.text(resultText, 10, 30);
+            doc.text('Growth Chart and Cash Flow Chart:', 10, 50);
+
+            doc.addImage(growthChart.toBase64Image(), 'JPEG', 10, 60, 180, 100);
+            doc.addImage(cashFlowChart.toBase64Image(), 'JPEG', 10, 170, 180, 100);
+
+            doc.save('retirement_savings_estimate.pdf');
+        }
         
     </script>
 </body>
