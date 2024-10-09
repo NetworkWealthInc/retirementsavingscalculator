@@ -347,8 +347,6 @@ function formatCurrency(value) {
             doc.addImage(growthChart.toBase64Image(), 'JPEG', 25, 60, 140, 60);
             doc.text('Pre-Tax Cash Flow', 10, 130); 
             doc.addImage(cashFlowChart.toBase64Image(), 'JPEG', 25, 140, 140, 60);
-            doc.text('Table', 10, 200); 
-            doc.addImage(growthTable.toBase64Image(), 'JPEG', 25, 220, 140, 60);
             
 
             doc.save('retirement_savings_estimate.pdf');
