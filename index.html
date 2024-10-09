@@ -200,6 +200,10 @@
                             title: {
                                 display: true,
                                 text: 'Age',
+                            },
+                            ticks: {
+                                autoSkip: true,
+                                maxTicksLimit: (retirementAge - currentAge + 1),
                             }
                         },
                         stacked: true,
