@@ -353,7 +353,11 @@ function formatCurrency(value) {
             doc.addImage(growthChart.toBase64Image(), 'JPEG', 25, 60, 140, 60);
             doc.text('Pre-Tax Cash Flow', 10, 130); 
             doc.addImage(cashFlowChart.toBase64Image(), 'JPEG', 25, 140, 140, 60);
-            
+
+             doc.setFontSize(8); // Smaller font size for the footer
+            const footerText = "Please note: This data is for simulation purposes only. For inquiries please reach out to www.support.networkwealth.com © Network Wealth 2024";
+            doc.text(footerText, 14, doc.internal.pageSize.height - 10); // Position footer at the bottom of the page
+
 
             doc.save('retirement_savings_estimate.pdf');
         }
