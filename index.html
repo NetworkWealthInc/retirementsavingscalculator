@@ -6,10 +6,53 @@
     <title>Retirement Savings Calculator</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        /* Add necessary styling */
+        body {
+            font-family: Arial, sans-serif;
+        }
+
+        #resultPage {
+            display: none;
+        }
+
+        button {
+            background-color: #40A7DD;
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #3595c7;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+
+        th, td {
+            padding: 8px;
+            text-align: center;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        canvas {
+            margin-top: 20px;
+        }
     </style>
 </head>
 <body>
+
     <div id="calculator" class="active">
         <h1>Retirement Savings Calculator</h1>
         <form onsubmit="event.preventDefault(); calculateAndShowResult();">
@@ -35,11 +78,11 @@
             <label for="annual-rate">Annual Rate of Return (%):</label>
             <input type="number" id="annual-rate" required><br><br>
 
-            <button type="submit" style="background-color: #40A7DD; border-radius: 10px;">Calculate</button>
+            <button type="submit">Calculate</button>
         </form>
     </div>
 
-    <div id="resultPage" class="hidden">
+    <div id="resultPage">
         <h2>Results</h2>
         <p id="result"></p>
         <canvas id="growthChart"></canvas>
@@ -50,7 +93,6 @@
     <script>
         let growthChart;
 
-        // Replace calculateAndShowResult with the updated one
         function calculateAndShowResult() {
             const currentAge = parseInt(document.getElementById('current-age').value);
             const retirementAge = parseInt(document.getElementById('retirement-age').value);
@@ -102,13 +144,12 @@
 
             createGrowthChart(chartData, currentAge, retirementAge);
             createGrowthTable(tableData);
-            createCashFlowChart(totalFutureValue, retirementAge);
-
-            document.getElementById('calculator').classList.remove('active');
-            document.getElementById('resultPage').classList.add('active');
+            
+            // Show result page and hide the calculator page
+            document.getElementById('calculator').style.display = 'none';
+            document.getElementById('resultPage').style.display = 'block';
         }
 
-        // Replace createGrowthChart with the updated one
         function createGrowthChart(chartData, currentAge, retirementAge) {
             const labels = [];
             for (let i = currentAge; i <= retirementAge; i++) {
@@ -183,9 +224,10 @@
         }
 
         function goBack() {
-            document.getElementById('calculator').classList.add('active');
-            document.getElementById('resultPage').classList.remove('active');
+            document.getElementById('calculator').style.display = 'block';
+            document.getElementById('resultPage').style.display = 'none';
         }
     </script>
+
 </body>
 </html>
