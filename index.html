@@ -315,20 +315,6 @@ function formatCurrency(value) {
             });
     }
 
-    function createGrowthTable(data) {
-    const table = document.getElementById('growthTable');
-    table.innerHTML = '<tr><th>Age</th><th>Retirement Savings Value</th></tr>';
-    data.forEach(item => {
-        const row = document.createElement('tr');
-        const ageCell = document.createElement('td');
-        ageCell.innerText = item.year;
-        const valueCell = document.createElement('td');
-        valueCell.innerText = $${item.value.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}; // Corrected line
-        row.appendChild(ageCell);
-        row.appendChild(valueCell);
-        table.appendChild(row);
-    });
-}
 
     function goBack() {
             document.getElementById('calculator').classList.add('active');
