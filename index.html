@@ -20,7 +20,7 @@
             display: block;
         }
 
-        label, input {
+        label, input, .toggle-option {
             display: block;
             margin: 10px 0;
         }
@@ -74,7 +74,7 @@
         }
     </style>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </head>
 <body>
     <!-- Input Form -->
@@ -96,8 +96,17 @@
         <label for="non-registered-savings">Non-Registered Savings and Investments ($)</label>
         <input type="number" id="non-registered-savings" min="0">
 
-        <label for="monthly-contribution">Monthly Savings ($)</label>
-        <input type="number" id="monthly-contribution" min="0">
+        <label for="contribution">Savings Contribution ($)</label>
+        <input type="number" id="contribution" min="0">
+
+        <!-- Toggle for Monthly/Annual Contribution -->
+        <div class="toggle-option">
+            <label>Contribution Frequency:</label>
+            <input type="radio" id="monthly" name="frequency" value="monthly" checked>
+            <label for="monthly">Monthly</label>
+            <input type="radio" id="annual" name="frequency" value="annual">
+            <label for="annual">Annual</label>
+        </div>
 
         <label for="annual-rate">Expected Annual Rate of Return (%)</label>
         <input type="number" id="annual-rate" step="0.01" min="0">
@@ -118,9 +127,9 @@
 
     <script>
        
-        let growthChart, cashFlowChart;
+let growthChart, cashFlowChart;
 
-       function calculateAndShowResult() {
+function calculateAndShowResult() {
     // Get user inputs
     const currentAge = parseInt(document.getElementById('current-age').value);
     const retirementAge = parseInt(document.getElementById('retirement-age').value);
@@ -129,6 +138,7 @@
     const nonRegisteredSavings = parseFloat(document.getElementById('non-registered-savings').value) || 0;
     const monthlyContribution = parseFloat(document.getElementById('monthly-contribution').value);
     const annualRate = parseFloat(document.getElementById('annual-rate').value) / 100;
+    const frequency = document.querySelector('input[name="frequency"]:checked').value;
 
     // Validate inputs
     if (isNaN(currentAge) || isNaN(retirementAge) || isNaN(monthlyContribution) ||
@@ -136,7 +146,8 @@
         alert('Please enter valid values.');
         return;
     }
-
+    
+    const adjustedContribution = (frequency === 'monthly') ? contribution * 12 : contribution;
     // Calculate years to retirement
     const yearsToRetirement = retirementAge - currentAge;
 
@@ -151,45 +162,37 @@
     let futureValueTFSA = tfsaSavings;
     let futureValueNonRegistered = nonRegisteredSavings;
 
-    for (let i = 0; i <= yearsToRetirement; i++) {
-        // Compound yearly for each account type
-        futureValueRegistered += (monthlyContribution * 12) / 3; // Split contribution equally
-        futureValueTFSA += (monthlyContribution * 12) / 3;
-        futureValueNonRegistered += (monthlyContribution * 12) / 3;
+     for (let i = 0; i <= yearsToRetirement; i++) {
+                futureValueRegistered += adjustedContribution / 3;
+                futureValueTFSA += adjustedContribution / 3;
+                futureValueNonRegistered += adjustedContribution / 3;
 
-        futureValueRegistered += futureValueRegistered * annualRate;  
-        futureValueTFSA += futureValueTFSA * annualRate;  
-        futureValueNonRegistered += futureValueNonRegistered * annualRate;  
+                futureValueRegistered += futureValueRegistered * annualRate;  
+                futureValueTFSA += futureValueTFSA * annualRate;  
+                futureValueNonRegistered += futureValueNonRegistered * annualRate;
 
-        // Push values to chart data
-        chartData.registered.push(futureValueRegistered);
-        chartData.tfsa.push(futureValueTFSA);
-        chartData.nonRegistered.push(futureValueNonRegistered);
+                chartData.registered.push(futureValueRegistered);
+                chartData.tfsa.push(futureValueTFSA);
+                chartData.nonRegistered.push(futureValueNonRegistered);
 
-        // Capture data for the table
-        tableData.push({
-            year: currentAge + i,
-            value: futureValueRegistered + futureValueTFSA + futureValueNonRegistered
-        });
-    }
+                tableData.push({
+                    year: currentAge + i,
+                    value: futureValueRegistered + futureValueTFSA + futureValueNonRegistered
+                });
+            }
 
-    // Format future value with commas and show result
     const totalFutureValue = futureValueRegistered + futureValueTFSA + futureValueNonRegistered;
-    document.getElementById('result').innerHTML = Your estimated savings at retirement: $${totalFutureValue.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")};
+            document.getElementById('result').innerHTML = `Your estimated savings at retirement: $${totalFutureValue.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`;
 
-    // Create growth chart
-    createGrowthChart(chartData, currentAge, retirementAge);
-    // Create table
-    createGrowthTable(tableData);
-    // Create cash flow chart
-    createCashFlowChart(totalFutureValue, retirementAge);
+            createGrowthChart(chartData, currentAge, retirementAge);
+            createGrowthTable(tableData);
+            createCashFlowChart(totalFutureValue, retirementAge);
 
-    // Show result and hide the form
-    document.getElementById('calculator').classList.remove('active');
-    document.getElementById('resultPage').classList.add('active');
-}
+            document.getElementById('calculator').classList.remove('active');
+            document.getElementById('resultPage').classList.add('active');
+        }
 
-     function createGrowthChart(chartData, currentAge, retirementAge) {
+    function createGrowthChart(chartData, currentAge, retirementAge) {
     const labels = [];
     const currentYear = new Date().getFullYear();
 
