@@ -276,19 +276,19 @@ function createGrowthChart(chartData, currentAge, retirementAge) {
                         {
                             label: 'Registered Retirement Savings',
                             data: chartData.registered,
-                            backgroundColor: 'blue',
+                            backgroundColor: '#126090',
                             stack: 'combined',
                         },
                         {
                             label: 'TFSAs',
                             data: chartData.tfsa,
-                            backgroundColor: 'green',
+                            backgroundColor: '#40A7DD',
                             stack: 'combined',
                         },
                         {
                             label: 'Non-Registered Savings',
                             data: chartData.nonRegistered,
-                            backgroundColor: 'pink',
+                            backgroundColor: '#83D3F6',
                             stack: 'combined',
                         }
                     ]
@@ -363,7 +363,7 @@ cashFlowChart = new Chart(ctx, {
         datasets: [{
             label: 'Annual Pre-tax Cash Flow',
             data: cashFlowData,
-            backgroundColor: 'rgba(255, 159, 64, 0.7)',
+            backgroundColor: '#40A7DD',
         }]
     },
     options: {
