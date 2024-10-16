@@ -331,7 +331,7 @@ function createCashFlowChart(totalValue, yearsToRetirement) {
     const yearsAfterRetirement = 100 - retirementAge;
     console.log('Years After Retirement:', yearsAfterRetirement); // Debugging line
 
-    // Calculate annual withdrawal only if yearsAfterRetirement is greater than 0
+    // Ensure annual withdrawal is calculated only if yearsAfterRetirement is positive
     const annualWithdrawal = yearsAfterRetirement > 0 ? totalValue / yearsAfterRetirement : 0;
     console.log('Annual Withdrawal:', annualWithdrawal); // Debugging line
 
