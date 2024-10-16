@@ -203,10 +203,10 @@
             let futureValueTFSA = tfsaSavings;
             let futureValueNonRegistered = nonRegisteredSavings;
 
-           for (let i = 0; i <= yearsToRetirement; i++) {
-    const registeredContribution = registeredContributionAmount; // Calculate based on input
-    const tfsaContribution = tfsaContributionAmount; // Calculate based on input
-    const nonRegisteredContribution = nonRegisteredContributionAmount; // Calculate based on input
+          for (let i = 0; i <= yearsToRetirement; i++) {
+    const registeredContribution = adjustedRegisteredContribution;
+    const tfsaContribution = adjustedTFSAContribution;
+    const nonRegisteredContribution = adjustedNonRegisteredContribution;
 
     futureValueRegistered += registeredContribution;
     futureValueTFSA += tfsaContribution;
@@ -231,6 +231,7 @@
         nonRegisteredContribution: nonRegisteredContribution,
     });
 }
+
 
             const totalFutureValue = futureValueRegistered + futureValueTFSA + futureValueNonRegistered;
             document.getElementById('result').innerHTML = `Your estimated savings at retirement: $${totalFutureValue.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`;
