@@ -78,17 +78,7 @@
             background-color: #40A7DD;
             color: white;
         }
-
-        #charts-container {
-    width: 200%; /* Match the growth table */
-}
-
-canvas {
-    width: 200%; /* Adjust this to fit your layout */
-    max-width: 800px; /* Optional max width */
-    height: auto; /* Maintain aspect ratio */
-    margin: 0 auto; /* Center canvas within its container */
-}
+        
     </style>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
@@ -154,10 +144,8 @@ canvas {
     <div class="result-page" id="resultPage">
         <h1>Your Estimated Retirement Savings</h1>
         <div class="result" id="result"></div>
-        <div id="charts-container" style="display: flex; justify-content: center; flex-direction: column;">
             <canvas id="growthChart"></canvas>
             <canvas id="cashFlowChart"></canvas>
-        </div>
     <div class="table-container">
         <table id="growthTable">
     <thead>
