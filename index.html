@@ -171,7 +171,7 @@
     <script>
         let growthChart, cashFlowChart;
 
-        function calculateAndShowResult() {
+function calculateAndShowResult() {
             // Get user inputs
             const currentAge = parseInt(document.getElementById('current-age').value);
             const retirementAge = parseInt(document.getElementById('retirement-age').value);
@@ -252,7 +252,7 @@
             document.getElementById('resultPage').classList.add('active');
         }
 
-        function createGrowthChart(chartData, currentAge, retirementAge) {
+function createGrowthChart(chartData, currentAge, retirementAge) {
             const labels = [];
             const currentYear = new Date().getFullYear();
 
@@ -300,7 +300,7 @@
             });
         }
 
-       function createGrowthTable(tableData) {
+function createGrowthTable(tableData) {
     const tableBody = document.getElementById('growthTable').getElementsByTagName('tbody')[0];
     tableBody.innerHTML = ''; // Clear previous data
 
@@ -320,49 +320,53 @@
     });
 }
 
+function createCashFlowChart(totalValue, yearsToRetirement) {
+    const currentAge = parseInt(document.getElementById('current-age').value);
+    const retirementAge = currentAge + yearsToRetirement;
+    const cashFlowData = [];
+    const annualWithdrawal = totalValue / (100 - retirementAge);
 
-        function createCashFlowChart(totalValue, yearsToRetirement) {
-            const cashFlowData = [];
-            const annualWithdrawal = totalValue / (100 - (yearsToRetirement + parseInt(document.getElementById('current-age').value)));
-            const annualWithdrawal = remainingYears > 0 ? totalValue / remainingYears : 0;
-
-            for (let i = 0; i <= 100 - parseInt(document.getElementById('current-age').value); i++) {
-                cashFlowData.push(i <= yearsToRetirement ? 0 : annualWithdrawal);
-            }
-
-            const ctx = document.getElementById('cashFlowChart').getContext('2d');
-            if (cashFlowChart) cashFlowChart.destroy();
-            cashFlowChart = new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: Array.from({ length: cashFlowData.length }, (_, i) => `Age ${i + parseInt(document.getElementById('current-age').value)}`),
-                    datasets: [{
-                        label: 'Annual Cash Flow',
-                        data: cashFlowData,
-                        backgroundColor: 'rgba(255, 159, 64, 0.7)',
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            title: {
-                                display: true,
-                                text: 'Annual Cash Flow ($)',
-                            },
-                        }
-                    }
-                }
-            });
+    for (let i = 0; i <= 100 - currentAge; i++) {
+        if (i + currentAge < retirementAge) {
+            cashFlowData.push(0); // No cash flow before retirement
+        } else {
+            cashFlowData.push(annualWithdrawal); // Cash flow starts at retirement
         }
+    }
 
-        function goBack() {
+    const ctx = document.getElementById('cashFlowChart').getContext('2d');
+    if (cashFlowChart) cashFlowChart.destroy();
+    cashFlowChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: Array.from({ length: cashFlowData.length }, (_, i) => `Age ${i + currentAge}`),
+            datasets: [{
+                label: 'Annual Cash Flow',
+                data: cashFlowData,
+                backgroundColor: 'rgba(255, 159, 64, 0.7)',
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    title: {
+                        display: true,
+                        text: 'Annual Cash Flow ($)',
+                    },
+                }
+            }
+        }
+    });
+}
+
+function goBack() {
             document.getElementById('resultPage').classList.remove('active');
             document.getElementById('calculator').classList.add('active');
         }
 
-        function saveAsPDF() {
+function saveAsPDF() {
             const { jsPDF } = window.jspdf;
             const doc = new jsPDF();
 
