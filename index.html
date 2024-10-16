@@ -321,28 +321,37 @@
 }
 
 
-        function createCashFlowChart(totalValue, retirementAge) {
-            const ctx = document.getElementById('cashFlowChart').getContext('2d');
-            if (cashFlowChart) {
-                cashFlowChart.destroy();
+        function createCashFlowChart(totalValue, yearsToRetirement) {
+            const cashFlowData = [];
+            const annualWithdrawal = totalValue / (100 - (yearsToRetirement + parseInt(document.getElementById('current-age').value)));
+
+            for (let i = 0; i <= 100 - parseInt(document.getElementById('current-age').value); i++) {
+                cashFlowData.push(i <= yearsToRetirement ? 0 : annualWithdrawal);
             }
 
+            const ctx = document.getElementById('cashFlowChart').getContext('2d');
+            if (cashFlowChart) cashFlowChart.destroy();
             cashFlowChart = new Chart(ctx, {
-                type: 'doughnut',
+                type: 'bar',
                 data: {
-                    labels: ['Registered', 'TFSA', 'Non-Registered'],
+                    labels: Array.from({ length: cashFlowData.length }, (_, i) => `Age ${i + parseInt(document.getElementById('current-age').value)}`),
                     datasets: [{
-                        label: 'Contributions',
-                        data: [
-                            totalValue * 0.4,
-                            totalValue * 0.4,
-                            totalValue * 0.2,
-                        ],
-                        backgroundColor: ['blue', 'green', 'pink'],
+                        label: 'Annual Cash Flow',
+                        data: cashFlowData,
+                        backgroundColor: 'rgba(255, 159, 64, 0.7)',
                     }]
                 },
                 options: {
-                    responsive: true
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Annual Cash Flow ($)',
+                            },
+                        }
+                    }
                 }
             });
         }
