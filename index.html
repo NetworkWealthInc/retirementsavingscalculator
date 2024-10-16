@@ -87,8 +87,12 @@
         <label for="retirement-age">Desired Retirement Age</label>
         <input type="number" id="retirement-age" min="0" max="100">
 
+        <!-- Registered Retirement Savings -->
         <label for="registered-savings">Registered Retirement Savings ($)</label>
         <input type="number" id="registered-savings" min="0">
+
+        <label for="registered-contribution">Registered Savings Contribution ($)</label>
+        <input type="number" id="registered-contribution" min="0">
 
         <label for="registered-contribution-type">Registered Savings Contribution Type</label>
         <select id="registered-contribution-type">
@@ -96,8 +100,12 @@
             <option value="annual">Annual</option>
         </select>
 
+        <!-- TFSA Savings -->
         <label for="tfsa-savings">Tax-Free Savings Accounts (TFSAs) ($)</label>
         <input type="number" id="tfsa-savings" min="0">
+
+        <label for="tfsa-contribution">TFSA Contribution ($)</label>
+        <input type="number" id="tfsa-contribution" min="0">
 
         <label for="tfsa-contribution-type">TFSA Contribution Type</label>
         <select id="tfsa-contribution-type">
@@ -105,8 +113,12 @@
             <option value="annual">Annual</option>
         </select>
 
+        <!-- Non-Registered Savings -->
         <label for="non-registered-savings">Non-Registered Savings and Investments ($)</label>
         <input type="number" id="non-registered-savings" min="0">
+
+        <label for="non-registered-contribution">Non-Registered Contribution ($)</label>
+        <input type="number" id="non-registered-contribution" min="0">
 
         <label for="non-registered-contribution-type">Non-Registered Contribution Type</label>
         <select id="non-registered-contribution-type">
@@ -114,9 +126,7 @@
             <option value="annual">Annual</option>
         </select>
 
-        <label for="contribution">Total Savings Contribution ($)</label>
-        <input type="number" id="contribution" min="0">
-
+        <!-- Rate of Return -->
         <label for="annual-rate">Expected Annual Rate of Return (%)</label>
         <input type="number" id="annual-rate" step="0.01" min="0">
 
@@ -142,24 +152,26 @@
             const currentAge = parseInt(document.getElementById('current-age').value);
             const retirementAge = parseInt(document.getElementById('retirement-age').value);
             const registeredSavings = parseFloat(document.getElementById('registered-savings').value) || 0;
+            const registeredContribution = parseFloat(document.getElementById('registered-contribution').value) || 0;
             const tfsaSavings = parseFloat(document.getElementById('tfsa-savings').value) || 0;
+            const tfsaContribution = parseFloat(document.getElementById('tfsa-contribution').value) || 0;
             const nonRegisteredSavings = parseFloat(document.getElementById('non-registered-savings').value) || 0;
-            const contribution = parseFloat(document.getElementById('contribution').value);
+            const nonRegisteredContribution = parseFloat(document.getElementById('non-registered-contribution').value) || 0;
             const annualRate = parseFloat(document.getElementById('annual-rate').value) / 100;
             const registeredContributionType = document.getElementById('registered-contribution-type').value;
             const tfsaContributionType = document.getElementById('tfsa-contribution-type').value;
             const nonRegisteredContributionType = document.getElementById('non-registered-contribution-type').value;
 
             // Validate inputs
-            if (isNaN(currentAge) || isNaN(retirementAge) || isNaN(contribution) || isNaN(annualRate) || currentAge >= retirementAge) {
+            if (isNaN(currentAge) || isNaN(retirementAge) || isNaN(annualRate) || currentAge >= retirementAge) {
                 alert('Please enter valid values.');
                 return;
             }
 
             // Adjust contributions based on frequency
-            const registeredContribution = (registeredContributionType === 'monthly') ? contribution / 3 * 12 : contribution / 3;
-            const tfsaContribution = (tfsaContributionType === 'monthly') ? contribution / 3 * 12 : contribution / 3;
-            const nonRegisteredContribution = (nonRegisteredContributionType === 'monthly') ? contribution / 3 * 12 : contribution / 3;
+            const adjustedRegisteredContribution = (registeredContributionType === 'monthly') ? registeredContribution * 12 : registeredContribution;
+            const adjustedTFSAContribution = (tfsaContributionType === 'monthly') ? tfsaContribution * 12 : tfsaContribution;
+            const adjustedNonRegisteredContribution = (nonRegisteredContributionType === 'monthly') ? nonRegisteredContribution * 12 : nonRegisteredContribution;
 
             // Calculate years to retirement
             const yearsToRetirement = retirementAge - currentAge;
@@ -176,9 +188,9 @@
             let futureValueNonRegistered = nonRegisteredSavings;
 
             for (let i = 0; i <= yearsToRetirement; i++) {
-                futureValueRegistered += registeredContribution;
-                futureValueTFSA += tfsaContribution;
-                futureValueNonRegistered += nonRegisteredContribution;
+                futureValueRegistered += adjustedRegisteredContribution;
+                futureValueTFSA += adjustedTFSAContribution;
+                futureValueNonRegistered += adjustedNonRegisteredContribution;
 
                 futureValueRegistered += futureValueRegistered * annualRate;
                 futureValueTFSA += futureValueTFSA * annualRate;
@@ -231,13 +243,13 @@
                             stack: 'combined',
                         },
                         {
-                            label: 'Tax-Free Savings Accounts (TFSAs)',
+                            label: 'TFSAs',
                             data: chartData.tfsa,
                             backgroundColor: 'green',
                             stack: 'combined',
                         },
                         {
-                            label: 'Non-Registered Savings and Investments',
+                            label: 'Non-Registered Savings',
                             data: chartData.nonRegistered,
                             backgroundColor: 'pink',
                             stack: 'combined',
