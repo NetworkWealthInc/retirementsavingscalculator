@@ -324,15 +324,16 @@ function createGrowthTable(tableData) {
 
 function createCashFlowChart(totalValue, yearsToRetirement) {
     const currentAge = parseInt(document.getElementById('current-age').value);
-    const retirementAge = currentAge + yearsToRetirement;
+    const retirementAge = parseInt(document.getElementById('retirement-age').value); // Get from input directly
     const cashFlowData = [];
     
-    // Calculate the number of years after retirement until age 100
+    // Calculate years after retirement
     const yearsAfterRetirement = 100 - retirementAge;
+    
     console.log('Current Age:', currentAge);
-    console.log('Retirement Age:', retirementAge);
+    console.log('Retirement Age:', retirementAge); // Should now show correctly
     console.log('Years After Retirement:', yearsAfterRetirement);
-    console.log('Total Value:', totalValue); // Check if this is correct
+    console.log('Total Value:', totalValue);
 
     // Ensure annual withdrawal is calculated only if yearsAfterRetirement is positive
     let annualWithdrawal = 0;
@@ -340,7 +341,7 @@ function createCashFlowChart(totalValue, yearsToRetirement) {
         annualWithdrawal = totalValue / yearsAfterRetirement;
     }
     
-    console.log('Annual Withdrawal:', annualWithdrawal); // Check if this is correct
+    console.log('Annual Withdrawal:', annualWithdrawal);
 
     for (let i = 0; i <= 100 - currentAge; i++) {
         if (i + currentAge < retirementAge) {
@@ -350,7 +351,7 @@ function createCashFlowChart(totalValue, yearsToRetirement) {
         }
     }
 
-    console.log('Cash Flow Data:', cashFlowData); // Debugging line
+    console.log('Cash Flow Data:', cashFlowData);
 
     const ctx = document.getElementById('cashFlowChart').getContext('2d');
     if (cashFlowChart) cashFlowChart.destroy();
