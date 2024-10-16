@@ -84,8 +84,10 @@
 }
 
 canvas {
-    width: 200%; /* Stretch canvas to fill container */
+    width: 200%; /* Adjust this to fit your layout */
+    max-width: 800px; /* Optional max width */
     height: auto; /* Maintain aspect ratio */
+    margin: 0 auto; /* Center canvas within its container */
 }
     </style>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -152,7 +154,7 @@ canvas {
     <div class="result-page" id="resultPage">
         <h1>Your Estimated Retirement Savings</h1>
         <div class="result" id="result"></div>
-        <div id="charts-container">
+        <div id="charts-container" style="display: flex; justify-content: center; flex-direction: column;">
             <canvas id="growthChart"></canvas>
             <canvas id="cashFlowChart"></canvas>
         </div>
