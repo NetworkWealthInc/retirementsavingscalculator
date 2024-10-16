@@ -144,33 +144,38 @@
     </div>
 
     <!-- Result Page -->
-    <div class="result-page" id="resultPage"> <!-- Result section, initially hidden -->
-        <h1>Your Estimated Retirement Savings</h1> <!-- Main heading for the results -->
-        <div class="result" id="result"></div> <!-- Container for displaying results -->
-            <canvas id="growthChart"></canvas> <!-- Canvas for growth chart -->
-            <canvas id="cashFlowChart"></canvas> <!-- Canvas for cash flow chart -->
-    <div class="table-container"> <!-- Container for the results table -->
-        <table id="growthTable"> <!-- Table for displaying growth data -->
-    <thead>
-        <tr> <!-- Table header row -->
-            <th>Age</th> <!-- Column for age -->
-            <th>Retirement Savings Value</th> <!-- Column for total retirement savings value -->
-            <th>Registered Retirement Savings</th> <!-- Column for registered savings value -->
-            <th>Registered Savings Contribution</th> <!-- Column for registered contribution -->
-            <th>TFSA Value</th> <!-- Column for TFSA value -->
-            <th>TFSA Contribution</th> <!-- Column for TFSA contribution -->
-            <th>Non-Registered Savings Value</th> <!-- Column for non-registered savings value -->
-            <th>Non-Registered Contributions</th> <!-- Column for non-registered contributions -->
-        </tr>
-    </thead>
-    <tbody>
-        <!-- Data will be populated here dynamically -->
-    </tbody>
-</table>
+<div class="result-page" id="resultPage">
+    <h1>Your Estimated Retirement Savings</h1>
+
+    <!-- Move buttons to the top -->
+    <div class="button-container">
+        <button onclick="goBack()">Back</button>
+        <button onclick="saveAsPDF()">Save as PDF</button>
     </div>
-        <button onclick="goBack()">Back</button> <!-- Button to go back to the calculator -->
-        <button onclick="saveAsPDF()">Save as PDF</button> <!-- Button to save results as a PDF -->
+
+    <div class="result" id="result"></div>
+    <canvas id="growthChart"></canvas>
+    <canvas id="cashFlowChart"></canvas>
+    <div class="table-container">
+        <table id="growthTable">
+            <thead>
+                <tr>
+                    <th>Age</th>
+                    <th>Retirement Savings Value</th>
+                    <th>Registered Retirement Savings</th>
+                    <th>Registered Savings Contribution</th>
+                    <th>TFSA Value</th>
+                    <th>TFSA Contribution</th>
+                    <th>Non-Registered Savings Value</th>
+                    <th>Non-Registered Contributions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Data will be populated here -->
+            </tbody>
+        </table>
     </div>
+</div>
 
     <script>
         let growthChart, cashFlowChart; // Declare variables for chart instances
