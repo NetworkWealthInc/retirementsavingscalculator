@@ -102,48 +102,80 @@ function calculate() {
 
     const yearsToRetirement = retirementAge - currentAge;
 
-    let totalFutureValue = currentRRSP + currentTFSA + currentNonReg;
-    const growthData = [];
+    // Separate future values for each account type
+    let totalFutureRRSP = currentRRSP;
+    let totalFutureTFSA = currentTFSA;
+    let totalFutureNonReg = currentNonReg;
+
+    const growthDataRRSP = [];
+    const growthDataTFSA = [];
+    const growthDataNonReg = [];
 
     for (let i = 1; i <= yearsToRetirement; i++) {
         if (contributionType === "monthly") {
-            totalFutureValue += (contributionAmount * 12); // Monthly contribution converted to yearly
+            totalFutureRRSP += (contributionAmount * 12) / 3;
+            totalFutureTFSA += (contributionAmount * 12) / 3;
+            totalFutureNonReg += (contributionAmount * 12) / 3;
         } else if (contributionType === "annual") {
-            totalFutureValue += contributionAmount; // Direct annual contribution
+            totalFutureRRSP += contributionAmount / 3;
+            totalFutureTFSA += contributionAmount / 3;
+            totalFutureNonReg += contributionAmount / 3;
         }
 
-        totalFutureValue += totalFutureValue * annualGrowthRate;
+        totalFutureRRSP += totalFutureRRSP * annualGrowthRate;
+        totalFutureTFSA += totalFutureTFSA * annualGrowthRate;
+        totalFutureNonReg += totalFutureNonReg * annualGrowthRate;
 
-        growthData.push({ year: currentAge + i, value: totalFutureValue });
+        growthDataRRSP.push({ year: currentAge + i, value: totalFutureRRSP });
+        growthDataTFSA.push({ year: currentAge + i, value: totalFutureTFSA });
+        growthDataNonReg.push({ year: currentAge + i, value: totalFutureNonReg });
     }
 
-    document.getElementById('result').textContent = `By age ${retirementAge}, your total retirement savings will be: $${totalFutureValue.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`;
+    document.getElementById('result').textContent = `By age ${retirementAge}, your total retirement savings will be: $${(totalFutureRRSP + totalFutureTFSA + totalFutureNonReg).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`;
 
-    createGrowthChart(growthData);
-    createGrowthTable(growthData);
-    createCashFlowChart(totalFutureValue, retirementAge);
+    createStackedColumnChart(growthDataRRSP, growthDataTFSA, growthDataNonReg);
+    createGrowthTable(growthDataRRSP, growthDataTFSA, growthDataNonReg);
+    createCashFlowChart(totalFutureRRSP, totalFutureTFSA, totalFutureNonReg);
 
     document.getElementById('calculator').classList.remove('active');
     document.getElementById('resultPage').classList.add('active');
 }
 
-function createGrowthChart(growthData) {
+function createStackedColumnChart(dataRRSP, dataTFSA, dataNonReg) {
     const ctx = document.getElementById('growthChart').getContext('2d');
-    const labels = growthData.map(row => row.year);
-    const values = growthData.map(row => row.value);
+    const labels = dataRRSP.map(row => row.year);
 
     new Chart(ctx, {
-        type: 'line',
+        type: 'bar',
         data: {
             labels: labels,
-            datasets: [{
-                label: 'Retirement Savings Growth',
-                data: values,
-                borderColor: '#40A7DD',
-                fill: false
-            }]
+            datasets: [
+                {
+                    label: 'RRSP',
+                    data: dataRRSP.map(row => row.value),
+                    backgroundColor: 'blue',
+                },
+                {
+                    label: 'TFSA',
+                    data: dataTFSA.map(row => row.value),
+                    backgroundColor: 'green',
+                },
+                {
+                    label: 'Non-Registered',
+                    data: dataNonReg.map(row => row.value),
+                    backgroundColor: 'pink',
+                }
+            ]
         },
         options: {
+            scales: {
+                x: {
+                    stacked: true
+                },
+                y: {
+                    stacked: true
+                }
+            },
             responsive: true,
             plugins: {
                 tooltip: {
@@ -162,17 +194,18 @@ function formatCurrency(value) {
     return `$${value.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`;
 }
 
-function createGrowthTable(tableData) {
+function createGrowthTable(dataRRSP, dataTFSA, dataNonReg) {
     const table = document.getElementById('growthTable');
     table.innerHTML = '<tr><th>Age</th><th>Retirement Savings Value</th></tr>';
 
-    tableData.forEach(row => {
+    dataRRSP.forEach((row, index) => {
         const rowElement = document.createElement('tr');
         const ageCell = document.createElement('td');
         const valueCell = document.createElement('td');
         
         ageCell.textContent = row.year;
-        valueCell.textContent = formatCurrency(row.value);
+        const totalValue = dataRRSP[index].value + dataTFSA[index].value + dataNonReg[index].value;
+        valueCell.textContent = formatCurrency(totalValue);
 
         rowElement.appendChild(ageCell);
         rowElement.appendChild(valueCell);
@@ -180,8 +213,9 @@ function createGrowthTable(tableData) {
     });
 }
 
-function createCashFlowChart(totalFutureValue) {
+function createCashFlowChart(rrsp, tfsa, nonReg) {
     const ctx = document.getElementById('cashFlowChart').getContext('2d');
+
     if (cashFlowChart) {
         cashFlowChart.destroy();
     }
@@ -189,14 +223,10 @@ function createCashFlowChart(totalFutureValue) {
     cashFlowChart = new Chart(ctx, {
         type: 'pie',
         data: {
-            labels: ['Registered Retirement Savings', 'TFSAs', 'Non-Registered Savings'],
+            labels: ['RRSP', 'TFSA', 'Non-Registered'],
             datasets: [{
-                data: [
-                    totalFutureValue / 3,  
-                    totalFutureValue / 3,
-                    totalFutureValue / 3
-                ],
-                backgroundColor: ['blue', 'green', 'pink'],
+                data: [rrsp, tfsa, nonReg],
+                backgroundColor: ['blue', 'green', 'pink']
             }]
         },
         options: {
@@ -204,7 +234,7 @@ function createCashFlowChart(totalFutureValue) {
             plugins: {
                 tooltip: {
                     callbacks: {
-                        label: function (tooltipItem) {
+                        label: function(tooltipItem) {
                             return formatCurrency(tooltipItem.raw);
                         }
                     }
@@ -220,23 +250,11 @@ function goBack() {
 }
 
 function saveAsPDF() {
-    const { jsPDF } = window.jspdf;
-    const doc = new jsPDF();
-
-    doc.text('Your Estimated Retirement Savings', 20, 20);
-    doc.text(document.getElementById('result').textContent, 20, 30);
-
-    const canvas = document.getElementById('growthChart');
-    const canvasImg = canvas.toDataURL('image/jpeg', 1.0);
-    doc.addImage(canvasImg, 'JPEG', 20, 40, 170, 90);
-
-    const canvasCashFlow = document.getElementById('cashFlowChart');
-    const cashFlowImg = canvasCashFlow.toDataURL('image/jpeg', 1.0);
-    doc.addPage();
-    doc.addImage(cashFlowImg, 'JPEG', 20, 20, 170, 90);
-
+    const doc = new jspdf.jsPDF();
+    doc.text(document.getElementById('result').textContent, 10, 10);
     doc.save('retirement_savings_report.pdf');
 }
 </script>
+
 </body>
 </html>
