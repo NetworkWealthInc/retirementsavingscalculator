@@ -38,6 +38,10 @@
 
 <div id="calculator" class="active">
     <h1>Retirement Savings Calculator</h1>
+
+    <label for="currentAge">Current Age:</label>
+    <input type="number" id="currentAge"><br><br>
+
     <label for="currentRRSP">Current Registered Retirement Savings:</label>
     <input type="number" id="currentRRSP"><br><br>
     
@@ -47,8 +51,14 @@
     <label for="currentNonReg">Current Non-Registered Savings:</label>
     <input type="number" id="currentNonReg"><br><br>
 
-    <label for="monthlyContribution">Monthly Contribution:</label>
-    <input type="number" id="monthlyContribution"><br><br>
+    <label for="contributionType">Contribution Type:</label>
+    <select id="contributionType">
+        <option value="monthly">Monthly Contribution</option>
+        <option value="annual">Annual Contribution</option>
+    </select><br><br>
+
+    <label for="contributionAmount">Contribution Amount:</label>
+    <input type="number" id="contributionAmount"><br><br>
     
     <label for="annualGrowthRate">Annual Growth Rate (%):</label>
     <input type="number" id="annualGrowthRate" step="0.01"><br><br>
@@ -81,21 +91,27 @@
 let cashFlowChart;
 
 function calculate() {
+    const currentAge = parseInt(document.getElementById('currentAge').value) || 30;
     const currentRRSP = parseFloat(document.getElementById('currentRRSP').value) || 0;
     const currentTFSA = parseFloat(document.getElementById('currentTFSA').value) || 0;
     const currentNonReg = parseFloat(document.getElementById('currentNonReg').value) || 0;
-    const monthlyContribution = parseFloat(document.getElementById('monthlyContribution').value) || 0;
+    const contributionType = document.getElementById('contributionType').value;
+    const contributionAmount = parseFloat(document.getElementById('contributionAmount').value) || 0;
     const annualGrowthRate = parseFloat(document.getElementById('annualGrowthRate').value) / 100 || 0;
     const retirementAge = parseInt(document.getElementById('retirementAge').value);
 
-    const currentAge = 30; // Assume user is 30 years old for this example
     const yearsToRetirement = retirementAge - currentAge;
 
     let totalFutureValue = currentRRSP + currentTFSA + currentNonReg;
     const growthData = [];
 
     for (let i = 1; i <= yearsToRetirement; i++) {
-        totalFutureValue += (monthlyContribution * 12);
+        if (contributionType === "monthly") {
+            totalFutureValue += (contributionAmount * 12); // Monthly contribution converted to yearly
+        } else if (contributionType === "annual") {
+            totalFutureValue += contributionAmount; // Direct annual contribution
+        }
+
         totalFutureValue += totalFutureValue * annualGrowthRate;
 
         growthData.push({ year: currentAge + i, value: totalFutureValue });
