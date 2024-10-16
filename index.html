@@ -326,7 +326,10 @@ function createCashFlowChart(totalValue, yearsToRetirement) {
     const currentAge = parseInt(document.getElementById('current-age').value);
     const retirementAge = currentAge + yearsToRetirement;
     const cashFlowData = [];
-    const annualWithdrawal = totalValue / (100 - retirementAge); // Assuming withdrawals happen until age 100
+    const yearsAfterRetirement = 100 - retirementAge;
+
+    // Assuming equal withdrawals until age 100
+    const annualWithdrawal = totalValue / (yearsAfterRetirement > 0 ? yearsAfterRetirement : 1); 
 
     for (let i = 0; i <= 100 - currentAge; i++) {
         if (i + currentAge < retirementAge) {
