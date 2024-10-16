@@ -172,25 +172,27 @@
         let growthChart, cashFlowChart;
 
 function calculateAndShowResult() {
-            // Get user inputs
-            const currentAge = parseInt(document.getElementById('current-age').value);
-            const retirementAge = parseInt(document.getElementById('retirement-age').value);
-            const registeredSavings = parseFloat(document.getElementById('registered-savings').value) || 0;
-            const registeredContribution = parseFloat(document.getElementById('registered-contribution').value) || 0;
-            const tfsaSavings = parseFloat(document.getElementById('tfsa-savings').value) || 0;
-            const tfsaContribution = parseFloat(document.getElementById('tfsa-contribution').value) || 0;
-            const nonRegisteredSavings = parseFloat(document.getElementById('non-registered-savings').value) || 0;
-            const nonRegisteredContribution = parseFloat(document.getElementById('non-registered-contribution').value) || 0;
-            const annualRate = parseFloat(document.getElementById('annual-rate').value) / 100;
-            const registeredContributionType = document.getElementById('registered-contribution-type').value;
-            const tfsaContributionType = document.getElementById('tfsa-contribution-type').value;
-            const nonRegisteredContributionType = document.getElementById('non-registered-contribution-type').value;
+    // Get user inputs
+    const currentAge = parseInt(document.getElementById('current-age').value);
+    const retirementAge = parseInt(document.getElementById('retirement-age').value);
+    const registeredSavings = parseFloat(document.getElementById('registered-savings').value) || 0;
+    const registeredContribution = parseFloat(document.getElementById('registered-contribution').value) || 0;
+    const tfsaSavings = parseFloat(document.getElementById('tfsa-savings').value) || 0;
+    const tfsaContribution = parseFloat(document.getElementById('tfsa-contribution').value) || 0;
+    const nonRegisteredSavings = parseFloat(document.getElementById('non-registered-savings').value) || 0;
+    const nonRegisteredContribution = parseFloat(document.getElementById('non-registered-contribution').value) || 0;
+    const annualRate = parseFloat(document.getElementById('annual-rate').value) / 100;
+    const registeredContributionType = document.getElementById('registered-contribution-type').value;
+    const tfsaContributionType = document.getElementById('tfsa-contribution-type').value;
+    const nonRegisteredContributionType = document.getElementById('non-registered-contribution-type').value;
 
-            // Validate inputs
-            if (isNaN(currentAge) || isNaN(retirementAge) || isNaN(annualRate) || currentAge >= retirementAge) {
-                alert('Please enter valid values.');
-                return;
-            }
+    // Validate inputs
+    if (isNaN(currentAge) || isNaN(retirementAge) || isNaN(annualRate) || currentAge >= retirementAge) {
+        alert('Please enter valid values.');
+        return;
+    }
+
+    console.log('Inputs:', { currentAge, retirementAge, registeredSavings, registeredContribution, tfsaSavings, tfsaContribution, nonRegisteredSavings, nonRegisteredContribution, annualRate });
 
             // Adjust contributions based on frequency
             const adjustedRegisteredContribution = (registeredContributionType === 'monthly') ? registeredContribution * 12 : registeredContribution;
@@ -324,7 +326,7 @@ function createCashFlowChart(totalValue, yearsToRetirement) {
     const currentAge = parseInt(document.getElementById('current-age').value);
     const retirementAge = currentAge + yearsToRetirement;
     const cashFlowData = [];
-    const annualWithdrawal = totalValue / (100 - retirementAge);
+    const annualWithdrawal = totalValue / (100 - retirementAge); // Assuming withdrawals happen until age 100
 
     for (let i = 0; i <= 100 - currentAge; i++) {
         if (i + currentAge < retirementAge) {
