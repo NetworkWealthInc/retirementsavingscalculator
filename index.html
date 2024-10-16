@@ -139,7 +139,23 @@
         <div class="result" id="result"></div>
         <canvas id="growthChart"></canvas>
         <canvas id="cashFlowChart"></canvas>
-        <table id="growthTable"></table>
+        <table id="growthTable">
+    <thead>
+        <tr>
+            <th>Age</th>
+            <th>Retirement Savings Value</th>
+            <th>Registered Retirement Savings</th>
+            <th>Registered Savings Contribution</th>
+            <th>TFSA Value</th>
+            <th>TFSA Contribution</th>
+            <th>Non-Registered Savings Value</th>
+            <th>Non-Registered Contributions</th>
+        </tr>
+    </thead>
+    <tbody>
+        <!-- Data will be populated here -->
+    </tbody>
+</table>
         <button onclick="goBack()">Back</button>
         <button onclick="saveAsPDF()">Save as PDF</button>
     </div>
@@ -187,24 +203,34 @@
             let futureValueTFSA = tfsaSavings;
             let futureValueNonRegistered = nonRegisteredSavings;
 
-            for (let i = 0; i <= yearsToRetirement; i++) {
-                futureValueRegistered += adjustedRegisteredContribution;
-                futureValueTFSA += adjustedTFSAContribution;
-                futureValueNonRegistered += adjustedNonRegisteredContribution;
+           for (let i = 0; i <= yearsToRetirement; i++) {
+    const registeredContribution = registeredContributionAmount; // Calculate based on input
+    const tfsaContribution = tfsaContributionAmount; // Calculate based on input
+    const nonRegisteredContribution = nonRegisteredContributionAmount; // Calculate based on input
 
-                futureValueRegistered += futureValueRegistered * annualRate;
-                futureValueTFSA += futureValueTFSA * annualRate;
-                futureValueNonRegistered += futureValueNonRegistered * annualRate;
+    futureValueRegistered += registeredContribution;
+    futureValueTFSA += tfsaContribution;
+    futureValueNonRegistered += nonRegisteredContribution;
 
-                chartData.registered.push(futureValueRegistered);
-                chartData.tfsa.push(futureValueTFSA);
-                chartData.nonRegistered.push(futureValueNonRegistered);
+    futureValueRegistered += futureValueRegistered * annualRate;
+    futureValueTFSA += futureValueTFSA * annualRate;
+    futureValueNonRegistered += futureValueNonRegistered * annualRate;
 
-                tableData.push({
-                    year: currentAge + i,
-                    value: futureValueRegistered + futureValueTFSA + futureValueNonRegistered
-                });
-            }
+    chartData.registered.push(futureValueRegistered);
+    chartData.tfsa.push(futureValueTFSA);
+    chartData.nonRegistered.push(futureValueNonRegistered);
+
+    tableData.push({
+        age: currentAge + i,
+        totalValue: futureValueRegistered + futureValueTFSA + futureValueNonRegistered,
+        registeredValue: futureValueRegistered,
+        registeredContribution: registeredContribution,
+        tfsaValue: futureValueTFSA,
+        tfsaContribution: tfsaContribution,
+        nonRegisteredValue: futureValueNonRegistered,
+        nonRegisteredContribution: nonRegisteredContribution,
+    });
+}
 
             const totalFutureValue = futureValueRegistered + futureValueTFSA + futureValueNonRegistered;
             document.getElementById('result').innerHTML = `Your estimated savings at retirement: $${totalFutureValue.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`;
@@ -265,14 +291,26 @@
             });
         }
 
-        function createGrowthTable(tableData) {
-            const table = document.getElementById('growthTable');
-            table.innerHTML = '<tr><th>Age</th><th>Retirement Savings Value</th></tr>';
+       function createGrowthTable(tableData) {
+    const tableBody = document.getElementById('growthTable').getElementsByTagName('tbody')[0];
+    tableBody.innerHTML = ''; // Clear previous data
 
-            tableData.forEach(row => {
-                table.innerHTML += `<tr><td>${row.year}</td><td>$${row.value.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</td></tr>`;
-            });
-        }
+    tableData.forEach((row) => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+            <td>${row.age}</td>
+            <td>$${row.totalValue.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</td>
+            <td>$${row.registeredValue.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</td>
+            <td>$${row.registeredContribution.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</td>
+            <td>$${row.tfsaValue.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</td>
+            <td>$${row.tfsaContribution.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</td>
+            <td>$${row.nonRegisteredValue.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</td>
+            <td>$${row.nonRegisteredContribution.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</td>
+        `;
+        tableBody.appendChild(tr);
+    });
+}
+
 
         function createCashFlowChart(totalValue, retirementAge) {
             const ctx = document.getElementById('cashFlowChart').getContext('2d');
