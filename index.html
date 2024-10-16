@@ -329,9 +329,11 @@ function createCashFlowChart(totalValue, yearsToRetirement) {
     
     // Calculate the number of years after retirement until age 100
     const yearsAfterRetirement = 100 - retirementAge;
+    console.log('Years After Retirement:', yearsAfterRetirement); // Debugging line
 
     // Calculate annual withdrawal only if yearsAfterRetirement is greater than 0
     const annualWithdrawal = yearsAfterRetirement > 0 ? totalValue / yearsAfterRetirement : 0;
+    console.log('Annual Withdrawal:', annualWithdrawal); // Debugging line
 
     for (let i = 0; i <= 100 - currentAge; i++) {
         if (i + currentAge < retirementAge) {
@@ -340,6 +342,8 @@ function createCashFlowChart(totalValue, yearsToRetirement) {
             cashFlowData.push(annualWithdrawal); // Cash flow starts at retirement
         }
     }
+
+    console.log('Cash Flow Data:', cashFlowData); // Debugging line
 
     const ctx = document.getElementById('cashFlowChart').getContext('2d');
     if (cashFlowChart) cashFlowChart.destroy();
