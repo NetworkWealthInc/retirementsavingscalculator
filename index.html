@@ -329,11 +329,18 @@ function createCashFlowChart(totalValue, yearsToRetirement) {
     
     // Calculate the number of years after retirement until age 100
     const yearsAfterRetirement = 100 - retirementAge;
-    console.log('Years After Retirement:', yearsAfterRetirement); // Debugging line
+    console.log('Current Age:', currentAge);
+    console.log('Retirement Age:', retirementAge);
+    console.log('Years After Retirement:', yearsAfterRetirement);
+    console.log('Total Value:', totalValue); // Check if this is correct
 
     // Ensure annual withdrawal is calculated only if yearsAfterRetirement is positive
-    const annualWithdrawal = yearsAfterRetirement > 0 ? totalValue / yearsAfterRetirement : 0;
-    console.log('Annual Withdrawal:', annualWithdrawal); // Debugging line
+    let annualWithdrawal = 0;
+    if (yearsAfterRetirement > 0 && totalValue > 0) {
+        annualWithdrawal = totalValue / yearsAfterRetirement;
+    }
+    
+    console.log('Annual Withdrawal:', annualWithdrawal); // Check if this is correct
 
     for (let i = 0; i <= 100 - currentAge; i++) {
         if (i + currentAge < retirementAge) {
