@@ -343,7 +343,7 @@ function createCashFlowChart(totalValue, yearsToRetirement) {
         data: {
             labels: Array.from({ length: cashFlowData.length }, (_, i) => `Age ${i + currentAge}`),
             datasets: [{
-                label: 'Annual Cash Flow',
+                label: 'Annual Pre-tax Cash Flow',
                 data: cashFlowData,
                 backgroundColor: 'rgba(255, 159, 64, 0.7)',
             }]
@@ -355,7 +355,7 @@ function createCashFlowChart(totalValue, yearsToRetirement) {
                     beginAtZero: true,
                     title: {
                         display: true,
-                        text: 'Annual Cash Flow ($)',
+                        text: 'Annual Pre-tax Cash Flow ($)',
                     },
                 }
             }
