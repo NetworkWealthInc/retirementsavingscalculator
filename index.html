@@ -343,48 +343,41 @@ function createCashFlowChart(totalValue, yearsToRetirement) {
     
     console.log('Annual Withdrawal:', annualWithdrawal);
 
-    for (let i = 0; i <= 100 - retirementAge; i++) {
-    if (i + currentAge < retirementAge) {
-        cashFlowData.push(0); // No cash flow before retirement
-    } else {
-        cashFlowData.push(annualWithdrawal); // Cash flow starts at retirement
-    }
-}
-
-// Change the label generation
-const labels = Array.from({ length: cashFlowData.length }, (_, i) => `Age ${i + retirementAge}`);
-
-const ctx = document.getElementById('cashFlowChart').getContext('2d');
-if (cashFlowChart) cashFlowChart.destroy();
-cashFlowChart = new Chart(ctx, {
-    type: 'bar',
-    data: {
-        labels: labels, // Use new labels
-        datasets: [{
-            label: 'Annual Pre-tax Cash Flow',
-            data: cashFlowData,
-            backgroundColor: '#40A7DD',
-        }]
-    },
-    options: {
-        responsive: true,
-        scales: {
-            x: {
-                title: {
-                    display: true,
-                    text: 'Age',
-                },
-            },
-            y: {
-                beginAtZero: true,
-                title: {
-                    display: true,
-                    text: 'Annual Pre-tax Cash Flow ($)',
-                },
-            }
+    for (let i = 0; i <= 100 - currentAge; i++) {
+        if (i + currentAge < retirementAge) {
+            cashFlowData.push(0); // No cash flow before retirement
+        } else {
+            cashFlowData.push(annualWithdrawal); // Cash flow starts at retirement
         }
     }
-});
+
+    console.log('Cash Flow Data:', cashFlowData);
+
+    const ctx = document.getElementById('cashFlowChart').getContext('2d');
+    if (cashFlowChart) cashFlowChart.destroy();
+    cashFlowChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: Array.from({ length: cashFlowData.length }, (_, i) => `Age ${i + currentAge}`),
+            datasets: [{
+                label: 'Annual Pre-tax Cash Flow',
+                data: cashFlowData,
+                backgroundColor: '#40A7DD',
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    title: {
+                        display: true,
+                        text: 'Annual Pre-tax Cash Flow ($)',
+                    },
+                }
+            }
+        }
+    });
 }
 
 function goBack() {
