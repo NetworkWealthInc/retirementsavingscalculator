@@ -343,8 +343,9 @@
                     <td>$${row.tfsaContribution.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</td> <!-- TFSA contribution column -->
                     <td>$${row.nonRegisteredValue.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</td> <!-- Non-registered savings value column -->
                     <td>$${row.nonRegisteredContribution.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</td> <!-- Non-registered contribution column -->
-                    <td>$${row.totalValue.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</td> <!-- Total savings column (moved to end) -->
+                    <td style="font-weight: bold;">$${row.totalValue.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</td> <!-- Bold Total Investment Value column -->
                     `;
+
                 tableBody.appendChild(tr); // Append the row to the table body
             });
         }
