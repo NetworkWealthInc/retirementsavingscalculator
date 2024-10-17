@@ -167,6 +167,7 @@
         <table id="growthTable">
             <thead>
                 <tr>
+                    <th>Year</th>
                     <th>Age</th>
                     <th>Registered Savings</th>
                     <th>Registered Contribution</th>
@@ -332,10 +333,15 @@
             const tableBody = document.getElementById('growthTable').getElementsByTagName('tbody')[0]; // Get table body element
             tableBody.innerHTML = ''; // Clear any previous data in the table
 
+            const currentYear = new Date().getFullYear(); // Get the current year
+
+             data.forEach((row, index) => {
+                const year = currentYear + index; // Increment the year for each row
             // Populate the table with calculated data
             tableData.forEach((row) => {
                 const tr = document.createElement('tr'); // Create a new table row
                 tr.innerHTML = ` 
+                    <td>${year}</td> <!-- Year column -->
                     <td>${row.age}</td> <!-- Age column -->
                     <td>$${row.registeredValue.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</td> <!-- Registered savings column -->
                     <td>$${row.registeredContribution.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</td> <!-- Registered contribution column -->
