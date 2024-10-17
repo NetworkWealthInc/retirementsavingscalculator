@@ -335,26 +335,27 @@
 
             const currentYear = new Date().getFullYear(); // Get the current year
 
-             data.forEach((row, index) => {
-                const year = currentYear + index; // Increment the year for each row
-            // Populate the table with calculated data
-            tableData.forEach((row) => {
-                const tr = document.createElement('tr'); // Create a new table row
-                tr.innerHTML = ` 
-                    <td>${year}</td> <!-- Year column -->
-                    <td>${row.age}</td> <!-- Age column -->
-                    <td>$${row.registeredValue.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</td> <!-- Registered savings column -->
-                    <td>$${row.registeredContribution.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</td> <!-- Registered contribution column -->
-                    <td>$${row.tfsaValue.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</td> <!-- TFSA value column -->
-                    <td>$${row.tfsaContribution.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</td> <!-- TFSA contribution column -->
-                    <td>$${row.nonRegisteredValue.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</td> <!-- Non-registered savings value column -->
-                    <td>$${row.nonRegisteredContribution.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</td> <!-- Non-registered contribution column -->
-                    <td style="font-weight: bold;">$${row.totalValue.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</td> <!-- Bold Total Investment Value column -->
-                    `;
-
-                tableBody.appendChild(tr); // Append the row to the table body
-            });
-        }
+        tableData.forEach((row, index) => {
+            const year = currentYear + index; // Increment the year for each row
+        
+        // Create a new table row
+            const tr = document.createElement('tr');
+        
+        tr.innerHTML = ` 
+            <td>${year}</td> <!-- Year column -->
+            <td>${row.age}</td> <!-- Age column -->
+            <td>$${row.registeredValue.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</td> <!-- Registered savings column -->
+            <td>$${row.registeredContribution.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</td> <!-- Registered contribution column -->
+            <td>$${row.tfsaValue.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</td> <!-- TFSA value column -->
+            <td>$${row.tfsaContribution.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</td> <!-- TFSA contribution column -->
+            <td>$${row.nonRegisteredValue.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</td> <!-- Non-registered savings value column -->
+            <td>$${row.nonRegisteredContribution.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</td> <!-- Non-registered contribution column -->
+            <td style="font-weight: bold;">$${row.totalValue.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</td> <!-- Bold Total Investment Value column -->
+        `;
+        
+        tableBody.appendChild(tr); // Append the row to the table body
+    });
+}
 
         function createCashFlowChart(totalValue, yearsToRetirement) {
             const currentAge = parseInt(document.getElementById('current-age').value); // Get current age from input
