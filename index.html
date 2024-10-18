@@ -152,36 +152,36 @@
     </div>
 
     <!-- Result Page -->
-<div class="result-page" id="resultPage">
-    <h1>Your Estimated Retirement Savings</h1>
+<div class="result-page" id="resultPage"> <!-- Div for displaying the result page -->
+    <h1>Your Estimated Retirement Savings</h1> <!-- Heading for the result page -->
 
     <!-- Move buttons to the top -->
-    <div class="button-container">
-        <button onclick="goBack()">Back</button>
-        <button onclick="saveAsPDF()">Print</button>
+    <div class="button-container"> <!-- Container for the "Back" and "Print" buttons -->
+        <button onclick="goBack()">Back</button> <!-- Button to go back to the calculator page -->
+        <button onclick="saveAsPDF()">Print</button> <!-- Button to generate a PDF of the results -->
     </div>
 
-    <div class="result" id="result"></div>
-    <canvas id="growthChart" width="500" height="250"></canvas>
-    <canvas id="cashFlowChart" width="500" height="250"></canvas>
-    <div class="table-container">
-        <table id="growthTable">
+    <div class="result" id="result"></div> <!-- Div to display the result of the calculations -->
+    <canvas id="growthChart" width="500" height="250"></canvas> <!-- Canvas for the growth chart -->
+    <canvas id="cashFlowChart" width="500" height="250"></canvas> <!-- Canvas for the cash flow chart -->
+    <div class="table-container"> <!-- Container to hold the growth table -->
+        <table id="growthTable"> <!-- Table to display the growth data -->
             <thead>
                 <tr>
-                    <th>Year</th>
-                    <th>Age</th>
-                    <th>Registered Starting Value</th>
-                    <th>Registered Contribution</th>
-                    <th>Registered Savings</th>
-                    <th>TFSA Starting Value</th>
-                    <th>TFSA Contribution</th>
-                    <th>TFSA Value</th>
-                    <th>Non-Reg Starting Value</th>
-                    <th>Non-Registered Contribution</th>
-                    <th>Non-Registered Value</th>
-                    <th>Total Investment Value</th>
+                    <th>Year</th> <!-- Table header for year -->
+                    <th>Age</th> <!-- Table header for age -->
+                    <th>Registered Starting Value</th> <!-- Table header for registered savings starting value -->
+                    <th>Registered Contribution</th> <!-- Table header for registered savings contribution -->
+                    <th>Registered Savings</th> <!-- Table header for registered savings value -->
+                    <th>TFSA Starting Value</th> <!-- Table header for TFSA starting value -->
+                    <th>TFSA Contribution</th> <!-- Table header for TFSA contribution -->
+                    <th>TFSA Value</th> <!-- Table header for TFSA value -->
+                    <th>Non-Registered Starting Value</th> <!-- Table header for non-registered starting value -->
+                    <th>Non-Registered Contribution</th> <!-- Table header for non-registered contribution -->
+                    <th>Non-Registered Value</th> <!-- Table header for non-registered value -->
+                    <th>Total Investment Value</th> <!-- Table header for total investment value -->
                 </tr>
-            </thead>    
+            </thead>   
             <tbody>
                 <!-- Data will be populated here -->
             </tbody>
