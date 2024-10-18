@@ -448,36 +448,50 @@
     doc.addImage(cashFlowChartImage, 'PNG', 20, yPosition, 550, 250); // Add the image to the PDF
     yPosition += 280; // Adjust y position for the next section
 
-    // Add growth table to PDF
+    // Add growth table to PDF using autoTable
     doc.setFontSize(14);
     doc.text('Growth Table:', 20, yPosition);
 
     yPosition += 20; // Adjust y position for table
 
+    // Prepare the table headers and rows from the growth table
     const tableBody = document.getElementById('growthTable').getElementsByTagName('tbody')[0]; // Get table body element
     const rows = tableBody.getElementsByTagName('tr'); // Get all rows from the table
-    const marginLeft = 20;
-    const rowHeight = 15;
 
-    doc.setFontSize(10);
+    // Extract headers from the table
+    const tableHeader = [];
+    const headers = document.getElementById('growthTable').getElementsByTagName('thead')[0].getElementsByTagName('th');
+    for (let i = 0; i < headers.length; i++) {
+        tableHeader.push(headers[i].innerText);
+    }
 
+    // Extract rows data from the table
+    const tableData = [];
     for (let i = 0; i < rows.length; i++) {
         const row = rows[i];
-        const cells = row.getElementsByTagName('td'); // Get all cells in the row
-
-        let rowText = '';
+        const cells = row.getElementsByTagName('td');
+        const rowData = [];
         for (let j = 0; j < cells.length; j++) {
-            rowText += cells[j].innerText + '  '; // Extract text from each cell
+            rowData.push(cells[j].innerText);
         }
-
-        doc.text(rowText, marginLeft, yPosition); // Add row text to PDF
-        yPosition += rowHeight; // Move to the next line for each row
-
-        if (yPosition > doc.internal.pageSize.height - 40) { // If the content exceeds page height, add a new page
-            doc.addPage();
-            yPosition = 40; // Reset y position
-        }
+        tableData.push(rowData); // Push each row to the table data array
     }
+
+    // Use autoTable plugin to add the table to the PDF
+    doc.autoTable({
+        head: [tableHeader], // Table headers
+        body: tableData, // Table rows
+        startY: yPosition, // Start position of the table
+        theme: 'grid', // Apply grid lines for table cells
+        styles: {
+            fontSize: 10,
+            cellPadding: 4,
+            overflow: 'linebreak',
+        },
+        headStyles: {
+            fillColor: '#40A7DD', // Set header background color to match branding
+        },
+    });
 
     // Save the PDF with the specified name
     doc.save('retirement_savings_summary.pdf');
