@@ -438,7 +438,7 @@
     // Add growth chart to PDF
     const growthChartCanvas = document.getElementById('growthChart');
     const growthChartImage = growthChartCanvas.toDataURL('image/png'); // Convert chart to image
-    doc.addImage(growthChartImage, 'PNG', 20, 80, 400, 200); // Add the image to the PDF (adjust the size as needed)
+    doc.addImage(growthChartImage, 'PNG', 50, 80, 400, 200); // Add the image to the PDF (adjust the size as needed)
 
     // Add space between charts
     let yPosition = 350;
