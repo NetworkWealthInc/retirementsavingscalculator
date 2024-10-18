@@ -492,8 +492,12 @@
         headStyles: {
             fillColor: '#40A7DD', // Set header background color to match branding
         },
+        columnStyles: {
+            // Apply bold text for the last column (assuming it's the last in the data)
+            [tableHeader.length - 1]: { fontStyle: 'bold' }, // Bold the last column (Total Investment Value)
+        },
     });
-
+    
     // Save the PDF with the specified name
     doc.save('retirement_savings_summary.pdf');
 }
