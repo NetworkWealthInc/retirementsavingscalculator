@@ -324,12 +324,11 @@
                     ]
                 },
                 options: {
-        responsive: true, // Ensure the chart is responsive
-        maintainAspectRatio: false, // Allow custom sizing
-        scales: {
-            x: { stacked: true },
-            y: { stacked: true }
-        }
+                    scales: {
+                        x: { stacked: true }, // Stack the x-axis data
+                        y: { stacked: true } // Stack the y-axis data
+                    }
+
                 }
             });
         }
@@ -418,15 +417,15 @@
                     }]
                 },
                 options: {
-        responsive: true,
-        maintainAspectRatio: false, // Allow custom sizing
-        scales: {
-            y: {
-                beginAtZero: true,
-                title: {
-                    display: true,
-                    text: 'Annual Pre-tax Cash Flow ($)',
-                },
+                    responsive: true, // Responsive chart
+                    scales: {
+                        y: {
+                            beginAtZero: true, // Start y-axis at zero
+                            title: {
+                                display: true, // Display y-axis title
+                                text: 'Annual Pre-tax Cash Flow ($)', // Title text
+                            },
+
                         }
                     }
                 }
