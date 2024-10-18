@@ -170,12 +170,12 @@
                 <tr>
                     <th>Year</th>
                     <th>Age</th>
-                    <th>Registered Savings</th>
                     <th>Registered Contribution</th>
-                    <th>TFSA Value</th>
+                    <th>Registered Savings</th>
                     <th>TFSA Contribution</th>
-                    <th>Non-Registered Value</th>
+                    <th>TFSA Value</th>
                     <th>Non-Registered Contribution</th>
+                    <th>Non-Registered Value</th>
                     <th>Total Investment Value</th>
                 </tr>
             </thead>    
@@ -345,12 +345,12 @@
         tr.innerHTML = ` 
             <td>${year}</td> <!-- Year column -->
             <td>${row.age}</td> <!-- Age column -->
-            <td>$${row.registeredValue.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</td> <!-- Registered savings column -->
             <td>$${row.registeredContribution.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</td> <!-- Registered contribution column -->
-            <td>$${row.tfsaValue.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</td> <!-- TFSA value column -->
+            <td>$${row.registeredValue.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</td> <!-- Registered savings column -->
             <td>$${row.tfsaContribution.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</td> <!-- TFSA contribution column -->
-            <td>$${row.nonRegisteredValue.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</td> <!-- Non-registered savings value column -->
+            <td>$${row.tfsaValue.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</td> <!-- TFSA value column -->
             <td>$${row.nonRegisteredContribution.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</td> <!-- Non-registered contribution column -->
+            <td>$${row.nonRegisteredValue.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</td> <!-- Non-registered savings value column -->
             <td style="font-weight: bold;">$${row.totalValue.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</td> <!-- Bold Total Investment Value column -->
         `;
         
