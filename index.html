@@ -12,7 +12,7 @@
         }
 
         .calculator, .result-page {
-            max-width: 500px; /* Limits the maximum width of the calculator and result page */
+            max-width: 1000px; /* Limits the maximum width of the calculator and result page */
             margin: 0 auto; /* Centers the content horizontally */
             display: none; /* Initially hides the calculator and result page */
         }
@@ -324,10 +324,12 @@
                     ]
                 },
                 options: {
-                    scales: {
-                        x: { stacked: true }, // Stack the x-axis data
-                        y: { stacked: true } // Stack the y-axis data
-                    }
+        responsive: true, // Ensure the chart is responsive
+        maintainAspectRatio: false, // Allow custom sizing
+        scales: {
+            x: { stacked: true },
+            y: { stacked: true }
+        }
                 }
             });
         }
@@ -416,14 +418,15 @@
                     }]
                 },
                 options: {
-                    responsive: true, // Responsive chart
-                    scales: {
-                        y: {
-                            beginAtZero: true, // Start y-axis at zero
-                            title: {
-                                display: true, // Display y-axis title
-                                text: 'Annual Pre-tax Cash Flow ($)', // Title text
-                            },
+        responsive: true,
+        maintainAspectRatio: false, // Allow custom sizing
+        scales: {
+            y: {
+                beginAtZero: true,
+                title: {
+                    display: true,
+                    text: 'Annual Pre-tax Cash Flow ($)',
+                },
                         }
                     }
                 }
