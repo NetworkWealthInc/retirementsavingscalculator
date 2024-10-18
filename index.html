@@ -328,29 +328,40 @@
         }
 
         function createGrowthTable(tableData) {
-            const tableBody = document.getElementById('growthTable').getElementsByTagName('tbody')[0]; // Get table body element
-            tableBody.innerHTML = ''; // Clear any previous data in the table
+    const tableBody = document.getElementById('growthTable').getElementsByTagName('tbody')[0]; // Get table body element
+    tableBody.innerHTML = ''; // Clear any previous data in the table
 
-            const currentYear = new Date().getFullYear(); // Get the current year
+    const currentYear = new Date().getFullYear(); // Get the current year
 
-        tableData.forEach((row, index) => {
-            const year = currentYear + index; // Increment the year for each row
-        
+    tableData.forEach((row, index) => {
+        const year = currentYear + index; // Increment the year for each row
+
         // Create a new table row
-            const tr = document.createElement('tr');
-        
-        tr.innerHTML = ` 
+        const tr = document.createElement('tr');
+
+        tr.innerHTML = `
             <td>${year}</td> <!-- Year column -->
             <td>${row.age}</td> <!-- Age column -->
+
+            <!-- Registered savings columns -->
+            <td>$${row.registeredValueBeforeContribution.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</td> <!-- Registered value before contribution -->
             <td>$${row.registeredContribution.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</td> <!-- Registered contribution column -->
-            <td>$${row.registeredValue.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</td> <!-- Registered savings column -->
+            <td>$${row.registeredValue.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</td> <!-- Registered savings after growth column -->
+
+            <!-- TFSA columns -->
+            <td>$${row.tfsaValueBeforeContribution.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</td> <!-- TFSA value before contribution -->
             <td>$${row.tfsaContribution.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</td> <!-- TFSA contribution column -->
-            <td>$${row.tfsaValue.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</td> <!-- TFSA value column -->
+            <td>$${row.tfsaValue.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</td> <!-- TFSA value after growth column -->
+
+            <!-- Non-registered savings columns -->
+            <td>$${row.nonRegisteredValueBeforeContribution.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</td> <!-- Non-registered value before contribution -->
             <td>$${row.nonRegisteredContribution.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</td> <!-- Non-registered contribution column -->
-            <td>$${row.nonRegisteredValue.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</td> <!-- Non-registered savings value column -->
-            <td style="font-weight: bold;">$${row.totalValue.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</td> <!-- Bold Total Investment Value column -->
+            <td>$${row.nonRegisteredValue.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</td> <!-- Non-registered savings value after growth column -->
+
+            <!-- Total Investment Value column -->
+            <td style="font-weight: bold;">$${row.totalValue.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</td>
         `;
-        
+
         tableBody.appendChild(tr); // Append the row to the table body
     });
 }
