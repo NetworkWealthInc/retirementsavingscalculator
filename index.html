@@ -422,14 +422,67 @@
         }
 
         function saveAsPDF() {
-            const { jsPDF } = window.jspdf; // Import jsPDF library
-            const doc = new jsPDF(); // Create a new PDF document
+    const { jsPDF } = window.jspdf; // Import jsPDF library
+    const doc = new jsPDF('p', 'pt', 'a4'); // Create a new PDF document with portrait orientation, points, A4 size
 
-            doc.text('Retirement Savings Summary', 20, 20); // Add title to PDF
-            doc.text(document.getElementById('result').textContent, 20, 30); // Add savings summary to PDF
+    // Add title to PDF
+    doc.setFontSize(18);
+    doc.text('Retirement Savings Summary', 20, 30);
 
-            doc.save('retirement_savings_summary.pdf'); // Save the PDF with the specified name
+    // Add the savings summary to PDF
+    const savingsSummary = document.getElementById('result').textContent;
+    doc.setFontSize(12);
+    doc.text(savingsSummary, 20, 60);
+
+    // Add growth chart to PDF
+    const growthChartCanvas = document.getElementById('growthChart');
+    const growthChartImage = growthChartCanvas.toDataURL('image/png'); // Convert chart to image
+    doc.addImage(growthChartImage, 'PNG', 20, 80, 550, 250); // Add the image to the PDF (adjust the size as needed)
+
+    // Add space between charts
+    let yPosition = 350;
+
+    // Add cash flow chart to PDF
+    const cashFlowChartCanvas = document.getElementById('cashFlowChart');
+    const cashFlowChartImage = cashFlowChartCanvas.toDataURL('image/png'); // Convert chart to image
+    doc.addImage(cashFlowChartImage, 'PNG', 20, yPosition, 550, 250); // Add the image to the PDF
+    yPosition += 280; // Adjust y position for the next section
+
+    // Add growth table to PDF
+    doc.setFontSize(14);
+    doc.text('Growth Table:', 20, yPosition);
+
+    yPosition += 20; // Adjust y position for table
+
+    const tableBody = document.getElementById('growthTable').getElementsByTagName('tbody')[0]; // Get table body element
+    const rows = tableBody.getElementsByTagName('tr'); // Get all rows from the table
+    const marginLeft = 20;
+    const rowHeight = 15;
+
+    doc.setFontSize(10);
+
+    for (let i = 0; i < rows.length; i++) {
+        const row = rows[i];
+        const cells = row.getElementsByTagName('td'); // Get all cells in the row
+
+        let rowText = '';
+        for (let j = 0; j < cells.length; j++) {
+            rowText += cells[j].innerText + '  '; // Extract text from each cell
         }
+
+        doc.text(rowText, marginLeft, yPosition); // Add row text to PDF
+        yPosition += rowHeight; // Move to the next line for each row
+
+        if (yPosition > doc.internal.pageSize.height - 40) { // If the content exceeds page height, add a new page
+            doc.addPage();
+            yPosition = 40; // Reset y position
+        }
+    }
+
+    // Save the PDF with the specified name
+    doc.save('retirement_savings_summary.pdf');
+}
+
     </script>
 </body>
 </html>
