@@ -296,7 +296,8 @@
             if (growthChart) {
                 growthChart.destroy(); // Destroy previous chart instance if it exists
             }
-
+            document.getElementById('growthChart').width = 1000; 
+            document.getElementById('growthChart').height = 500;
             // Create a new bar chart
             growthChart = new Chart(ctx, {
                 type: 'bar', // Chart type
