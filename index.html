@@ -446,6 +446,19 @@
     doc.setFontSize(12);
     doc.text(savingsSummary, 20, 60);
 
+    doc.setFontSize(12); // Set font size
+
+    // Add Assumptions section
+    doc.text("Assumptions:", 20, 30);
+    doc.text(`Current Age: ${currentAge}`, 20, 50);
+    doc.text(`Desired Retirement Age: ${retirementAge}`, 20, 70);
+    doc.text(`Value of Registered Savings: $${registeredSavings.toFixed(2)}`, 20, 90);
+    doc.text(`Registered Contributions: $${registeredContribution.toFixed(2)}, ${registeredContributionType}`, 20, 110);
+    doc.text(`Value of TFSA: $${tfsaSavings.toFixed(2)}`, 20, 130);
+    doc.text(`TFSA Contributions: $${tfsaContribution.toFixed(2)}, ${tfsaContributionType}`, 20, 150);
+    doc.text(`Value of Non-registered: $${nonRegisteredSavings.toFixed(2)}`, 20, 170);
+    doc.text(`Non-registered Contributions: $${nonRegisteredContribution.toFixed(2)}, ${nonRegisteredContributionType}`, 20, 190);
+    doc.text(`Expected Rate of Return: ${annualRate * 100}%`, 20, 210);        
     // Add growth chart to PDF
     const growthChartCanvas = document.getElementById('growthChart');
     const growthChartImage = growthChartCanvas.toDataURL('image/png'); // Convert chart to image
