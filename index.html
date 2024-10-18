@@ -162,8 +162,8 @@
     </div>
 
     <div class="result" id="result"></div>
-    <canvas id="growthChart"></canvas>
-    <canvas id="cashFlowChart"></canvas>
+    <canvas id="growthChart" width="800" height="400"></canvas>
+    <canvas id="cashFlowChart" width="800" height="400"></canvas>
     <div class="table-container">
         <table id="growthTable">
             <thead>
@@ -479,7 +479,7 @@
     // Add growth chart to PDF
     const growthChartCanvas = document.getElementById('growthChart');
     const growthChartImage = growthChartCanvas.toDataURL('image/png'); // Convert chart to image
-    doc.addImage(growthChartImage, 'PNG', 50, 280, 400, 200); // Adjust the size as needed
+    doc.addImage(growthChartImage, 'PNG', 20, 80, 500, 300); // Adjust width and height as needed
 
     // Add space between charts
     let yPosition = 490;
@@ -487,7 +487,7 @@
     // Add cash flow chart to PDF
     const cashFlowChartCanvas = document.getElementById('cashFlowChart');
     const cashFlowChartImage = cashFlowChartCanvas.toDataURL('image/png'); // Convert chart to image
-    doc.addImage(cashFlowChartImage, 'PNG', 20, yPosition, 400, 200); // Add the image to the PDF
+    doc.addImage(cashFlowChartImage, 'PNG', 20, yPosition, 500, 300); // Adjust width and height as needed
     yPosition += 280; // Adjust y position for the next section
 
     // Add growth table to PDF using autoTable
