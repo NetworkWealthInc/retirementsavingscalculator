@@ -461,9 +461,9 @@
     doc.text(savingsSummary, 20, 60);
 
     doc.setFontSize(12); // Set font size
-
     // Add Assumptions section
     doc.text("Assumptions:", 20, 80); // Adjusted y-position for Assumptions
+    doc.setFontSize(10); // Set font size
     doc.text(`Current Age: ${currentAge}`, 20, 100);
     doc.text(`Desired Retirement Age: ${retirementAge}`, 20, 120);
     doc.text(`Value of Registered Savings: $${registeredSavings.toFixed(2)}`, 20, 140);
