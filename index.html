@@ -278,6 +278,8 @@
 
     document.getElementById('calculator').classList.remove('active');
     document.getElementById('resultPage').classList.add('active');
+
+    window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
         function createGrowthChart(chartData, currentAge, retirementAge) {
