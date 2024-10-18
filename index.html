@@ -424,7 +424,7 @@
 
         function saveAsPDF() {
     const { jsPDF } = window.jspdf; // Import jsPDF library
-    const doc = new jsPDF('p', 'pt', 'a4'); // Create a new PDF document with portrait orientation, points, A4 size
+    const doc = new jsPDF('l', 'pt', 'a4'); // Create a new PDF document with portrait orientation, points, A4 size
 
     // Add title to PDF
     doc.setFontSize(18);
