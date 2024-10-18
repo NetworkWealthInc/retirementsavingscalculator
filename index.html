@@ -438,7 +438,7 @@
     // Add growth chart to PDF
     const growthChartCanvas = document.getElementById('growthChart');
     const growthChartImage = growthChartCanvas.toDataURL('image/png'); // Convert chart to image
-    doc.addImage(growthChartImage, 'PNG', 20, 80, 550, 250); // Add the image to the PDF (adjust the size as needed)
+    doc.addImage(growthChartImage, 'PNG', 20, 80, 400, 200); // Add the image to the PDF (adjust the size as needed)
 
     // Add space between charts
     let yPosition = 350;
@@ -446,7 +446,7 @@
     // Add cash flow chart to PDF
     const cashFlowChartCanvas = document.getElementById('cashFlowChart');
     const cashFlowChartImage = cashFlowChartCanvas.toDataURL('image/png'); // Convert chart to image
-    doc.addImage(cashFlowChartImage, 'PNG', 20, yPosition, 550, 250); // Add the image to the PDF
+    doc.addImage(cashFlowChartImage, 'PNG', 20, yPosition, 400, 200); // Add the image to the PDF
     yPosition += 280; // Adjust y position for the next section
 
     // Add growth table to PDF using autoTable
@@ -496,8 +496,14 @@
             // Apply bold text for the last column (assuming it's the last in the data)
             [tableHeader.length - 1]: { fontStyle: 'bold' }, // Bold the last column (Total Investment Value)
         },
+        
     });
-    
+    // Add disclaimer to the bottom of the PDF
+    doc.setFontSize(7);
+    doc.text('Disclaimer: The information and values presented in this document are for illustration purposes only and should not be considered financial advice. Actual investment results may vary. Please consult with a financial professional for specific advice tailored to your situation.', 20, doc.internal.pageSize.height - 30, {
+    maxWidth: 550, // Ensures the text wraps within the page width
+});
+
     // Save the PDF with the specified name
     doc.save('retirement_savings_summary.pdf');
 }
