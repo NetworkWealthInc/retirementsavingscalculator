@@ -387,7 +387,7 @@
     const currentAge = parseInt(document.getElementById('current-age').value); // Get current age from input
     const desiredCashFlow = parseFloat(document.getElementById('desiredCashFlow').value); // Get desired cash flow after retirement
 
-    const cashFlowData = []; // Array to hold cash flow data
+    const desiredCashFlowData = []; // Array to hold desired cash flow data (user input)
     const shortfallData = []; // Array to hold shortfall data
     const surplusData = []; // Array to hold surplus data
     const yearsAfterRetirement = 100 - retirementAge; // Assume lifespan of 100 for withdrawal calculation
@@ -420,7 +420,7 @@
     // Loop through each year and apply withdrawal with the cost of living increase
     for (let i = 0; i <= 100 - currentAge; i++) {
         if (currentYear < retirementAge) {
-            cashFlowData.push(0); // No withdrawals before retirement
+            desiredCashFlowData.push(0); // No withdrawals before retirement
             shortfallData.push(0); // No shortfall before retirement
             surplusData.push(0); // No surplus before retirement
         } else {
@@ -428,7 +428,8 @@
             const adjustedWithdrawal = annualWithdrawal * Math.pow(1 + costOfLivingIncrease, currentYear - retirementAge);
             const adjustedDesiredCashFlow = desiredCashFlow * Math.pow(1 + costOfLivingIncrease, currentYear - retirementAge);
 
-            cashFlowData.push(adjustedWithdrawal); // Add adjusted withdrawal to cash flow data
+            // Add the desired cash flow (as entered by user) to the chart data
+            desiredCashFlowData.push(adjustedDesiredCashFlow); 
 
             if (adjustedWithdrawal < adjustedDesiredCashFlow) {
                 const shortfall = adjustedDesiredCashFlow - adjustedWithdrawal;
@@ -449,7 +450,7 @@
         currentYear++;
     }
 
-    console.log('Cash Flow Data:', cashFlowData);
+    console.log('Desired Cash Flow Data:', desiredCashFlowData);
     console.log('Shortfall Data:', shortfallData);
     console.log('Surplus Data:', surplusData);
 
@@ -458,21 +459,21 @@
     cashFlowChart = new Chart(ctx, {
         type: 'bar',
         data: {
-            labels: Array.from({ length: cashFlowData.length }, (_, i) => `Age ${i + currentAge}`),
+            labels: Array.from({ length: desiredCashFlowData.length }, (_, i) => `Age ${i + currentAge}`),
             datasets: [{
-                label: 'Annual Pre-tax Cash Flow',
-                data: cashFlowData,
-                backgroundColor: '#40A7DD',
+                label: 'Desired Pre-tax Cash Flow',
+                data: desiredCashFlowData,
+                backgroundColor: '#40A7DD', // Blue bars for desired cash flow (user input)
             },
             {
                 label: 'Shortfall',
                 data: shortfallData,
-                backgroundColor: 'red',
+                backgroundColor: 'red', // Red bars for shortfall
             },
             {
                 label: 'Surplus',
                 data: surplusData,
-                backgroundColor: 'green',
+                backgroundColor: 'green', // Green bars for surplus
             }]
         },
         options: {
