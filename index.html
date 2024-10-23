@@ -519,7 +519,12 @@
 
     // Add title to PDF
     doc.setFontSize(18);
-    doc.text('Retirement Savings Summary', 20, 30);
+    const title = 'Retirement Savings Summary';
+    const titleWidth = doc.getTextWidth(title); // Get the width of the title text
+    const pageWidth = doc.internal.pageSize.width; // Get the PDF page width
+    const xPosition = (pageWidth - titleWidth) / 2; // Calculate X position for centering
+    doc.text(title, xPosition, 30); // Use the calculated xPosition for centering
+
 
     // Add assumptions section
     doc.setFontSize(12);
