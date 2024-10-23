@@ -525,28 +525,24 @@
     const xPosition = (pageWidth - titleWidth) / 2; // Calculate X position for centering
     doc.text(title, xPosition, 30); // Use the calculated xPosition for centering
 
-
-    // Add Assumptions section
-doc.text("Assumptions:", 20, 80); // Adjusted y-position for Assumptions
-doc.setFontSize(10); // Set font size
-
-// Set left and right positions for the text
-const leftX = 20; // Left position for current age and retirement age
-const rightX = doc.internal.pageSize.width - 20; // Right position for the other values
-
-// Add Current Age and Desired Retirement Age
-doc.text(`Current Age: ${currentAge}`, leftX, 100);
-doc.text(`Desired Retirement Age: ${retirementAge}`, leftX, 120);
-
-// Format values with commas for better readability
-doc.text(`Value of Registered Savings: $${registeredSavings.toLocaleString()}`, rightX, 100, { align: 'right' });
-doc.text(`Registered Contributions: $${registeredContribution.toLocaleString()}, ${registeredContributionType}`, rightX, 120, { align: 'right' });
-doc.text(`Value of TFSA: $${tfsaSavings.toLocaleString()}`, rightX, 140, { align: 'right' });
-doc.text(`TFSA Contributions: $${tfsaContribution.toLocaleString()}, ${tfsaContributionType}`, rightX, 160, { align: 'right' });
-doc.text(`Value of Non-registered: $${nonRegisteredSavings.toLocaleString()}`, rightX, 180, { align: 'right' });
-doc.text(`Non-registered Contributions: $${nonRegisteredContribution.toLocaleString()}, ${nonRegisteredContributionType}`, rightX, 200, { align: 'right' });
-doc.text(`Expected Rate of Return: ${annualRate * 100}%`, rightX, 220, { align: 'right' });
-
+    // Add assumptions section
+    doc.setFontSize(12);
+    doc.text('Assumptions:', 20, 60);
+    doc.setFontSize(10);
+    const assumptions = [
+        `Current Age: ${currentAge}`,
+        `Desired Retirement Age: ${retirementAge}`,
+        `Value of Registered Savings: $${registeredSavings.toFixed(2)}`,
+        `Registered Contributions: $${registeredContribution.toFixed(2)} (${registeredContributionType})`,
+        `Value of TFSA: $${tfsaSavings.toFixed(2)}`,
+        `TFSA Contributions: $${tfsaContribution.toFixed(2)} (${tfsaContributionType})`,
+        `Value of Non-registered: $${nonRegisteredSavings.toFixed(2)}`,
+        `Non-registered Contributions: $${nonRegisteredContribution.toFixed(2)} (${nonRegisteredContributionType})`,
+        `Expected Rate of Return: ${(annualRate * 100).toFixed(2)}%`
+    ];
+    assumptions.forEach((text, index) => {
+        doc.text(text, 20, 80 + index * 20);
+    });
 
     // Add space between assumptions and charts
     let yPosition = 80 + assumptions.length * 20 + 20;
