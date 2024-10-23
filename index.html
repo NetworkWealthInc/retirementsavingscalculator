@@ -388,7 +388,8 @@
     const desiredCashFlow = parseFloat(document.getElementById('desiredCashFlow').value); // Get desired cash flow after retirement
 
     const cashFlowData = []; // Array to hold cash flow data
-    const shortfallOrSurplusData = []; // Array to hold shortfall/surplus data
+    const shortfallData = []; // Array to hold shortfall data
+    const surplusData = []; // Array to hold surplus data
     const yearsAfterRetirement = 100 - retirementAge; // Assume lifespan of 100 for withdrawal calculation
 
     console.log('Current Age:', currentAge);
@@ -396,7 +397,7 @@
     console.log('Years After Retirement:', yearsAfterRetirement);
     console.log('Total Value:', totalValue);
     console.log('Annual Growth Rate (from calculateAndShowResult):', annualRate);
-    console.log('Cost of Living Increase:', costOfLivingIncrease); // Log cost of living increase
+    console.log('Cost of Living Increase:', costOfLivingIncrease);
     console.log('Desired Annual Cash Flow:', desiredCashFlow);
 
     let totalDiscountFactor = 0;
@@ -420,7 +421,8 @@
     for (let i = 0; i <= 100 - currentAge; i++) {
         if (currentYear < retirementAge) {
             cashFlowData.push(0); // No withdrawals before retirement
-            shortfallOrSurplusData.push(0); // No shortfall/surplus before retirement
+            shortfallData.push(0); // No shortfall before retirement
+            surplusData.push(0); // No surplus before retirement
         } else {
             // Apply cost of living increase to both withdrawals and desired cash flow
             const adjustedWithdrawal = annualWithdrawal * Math.pow(1 + costOfLivingIncrease, currentYear - retirementAge);
@@ -428,10 +430,17 @@
 
             cashFlowData.push(adjustedWithdrawal); // Add adjusted withdrawal to cash flow data
 
-            const shortfallOrSurplus = adjustedWithdrawal - adjustedDesiredCashFlow; // Calculate surplus/shortfall
-            shortfallOrSurplusData.push(shortfallOrSurplus); // Add to surplus/shortfall data
+            if (adjustedWithdrawal < adjustedDesiredCashFlow) {
+                const shortfall = adjustedDesiredCashFlow - adjustedWithdrawal;
+                shortfallData.push(shortfall); // Add shortfall to the dataset
+                surplusData.push(0); // No surplus if there's a shortfall
+            } else {
+                const surplus = adjustedWithdrawal - adjustedDesiredCashFlow;
+                surplusData.push(surplus); // Add surplus to the dataset
+                shortfallData.push(0); // No shortfall if there's a surplus
+            }
 
-            console.log(`Year ${currentYear}, Withdrawal: ${adjustedWithdrawal.toFixed(2)}, Desired Cash Flow: ${adjustedDesiredCashFlow.toFixed(2)}, Surplus/Shortfall: ${shortfallOrSurplus.toFixed(2)}`);
+            console.log(`Year ${currentYear}, Withdrawal: ${adjustedWithdrawal.toFixed(2)}, Desired Cash Flow: ${adjustedDesiredCashFlow.toFixed(2)}, Surplus/Shortfall calculated.`);
 
             // Update remaining balance considering withdrawal and growth
             remainingBalance -= adjustedWithdrawal;
@@ -441,7 +450,8 @@
     }
 
     console.log('Cash Flow Data:', cashFlowData);
-    console.log('Shortfall/Surplus Data:', shortfallOrSurplusData);
+    console.log('Shortfall Data:', shortfallData);
+    console.log('Surplus Data:', surplusData);
 
     const ctx = document.getElementById('cashFlowChart').getContext('2d');
     if (cashFlowChart) cashFlowChart.destroy();
@@ -455,16 +465,25 @@
                 backgroundColor: '#40A7DD',
             },
             {
-                label: 'Surplus/Shortfall',
-                data: shortfallOrSurplusData,
-                backgroundColor: shortfallOrSurplusData.map(value => value >= 0 ? 'green' : 'red'), // green for surplus, red for shortfall
+                label: 'Shortfall',
+                data: shortfallData,
+                backgroundColor: 'red',
+            },
+            {
+                label: 'Surplus',
+                data: surplusData,
+                backgroundColor: 'green',
             }]
         },
         options: {
             responsive: true,
             scales: {
+                x: {
+                    stacked: true // Enable stacking on the x-axis
+                },
                 y: {
                     beginAtZero: true,
+                    stacked: true, // Enable stacking on the y-axis
                     title: {
                         display: true,
                         text: 'Annual Pre-tax Cash Flow ($)',
