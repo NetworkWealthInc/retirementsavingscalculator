@@ -379,93 +379,65 @@
     });
 }
 
-    function createCashFlowChart(totalValue, yearsToRetirement, annualRate) {
-    const currentAge = parseInt(document.getElementById('current-age').value); // Get current age from input
-    const retirementAge = parseInt(document.getElementById('retirement-age').value); // Get retirement age from input
-    
-    const cashFlowData = []; // Array to hold cash flow data
-    
-    // Calculate years after retirement
-    const yearsAfterRetirement = 100 - retirementAge; // Assume lifespan of 100 for withdrawal calculation
-    
-    console.log('Current Age:', currentAge); // Log current age for debugging
-    console.log('Retirement Age:', retirementAge); // Log retirement age for debugging
-    console.log('Years After Retirement:', yearsAfterRetirement); // Log years after retirement for debugging
-    console.log('Total Value:', totalValue); // Log total value for debugging
-    console.log('Annual Growth Rate (from calculateAndShowResult):', annualRate); // Log annual growth rate for debugging
-
-    // Step 1: Calculate the total discount factor based on growth rate
-    let totalDiscountFactor = 0;
-    for (let t = 1; t <= yearsAfterRetirement; t++) {
-        totalDiscountFactor += 1 / Math.pow(1 + annualRate, t); // Use annualRate as the growth rate
-    }
-
-    console.log('Total Discount Factor:', totalDiscountFactor); // Log total discount factor for debugging
-
-    // Step 2: Calculate annual withdrawal amount using the total discount factor
-    let annualWithdrawal = 0;
-    if (yearsAfterRetirement > 0 && totalValue > 0) {
-        annualWithdrawal = totalValue / totalDiscountFactor; // Calculate annual withdrawal
-    }
-
-    console.log('Annual Withdrawal:', annualWithdrawal); // Log annual withdrawal for debugging
-
-    // Step 3: Populate cash flow data array, considering growth and withdrawals
-    let remainingBalance = totalValue; // Initialize remaining balance at retirement
-    let currentYear = currentAge;
-    
-    for (let i = 0; i <= 100 - currentAge; i++) {
-        if (currentYear < retirementAge) {
-            // Before retirement, no cash flow
-            cashFlowData.push(0);
-        } else {
-            // After retirement, withdraw and apply growth
-            cashFlowData.push(annualWithdrawal); // Cash flow for this year
+    function createCashFlowChart(totalValue, yearsToRetirement) {
+            const currentAge = parseInt(document.getElementById('current-age').value); // Get current age from input
+            const retirementAge = parseInt(document.getElementById('retirement-age').value); // Get retirement age from input
+            const cashFlowData = []; // Array to hold cash flow data
             
-            // Log for each year
-            console.log(`Year ${currentYear}, Withdrawal: ${annualWithdrawal}, Remaining Balance: ${remainingBalance}`);
-
-            // Reduce remaining balance by withdrawal
-            remainingBalance -= annualWithdrawal;
+            // Calculate years after retirement
+            const yearsAfterRetirement = 100 - retirementAge; // Assume lifespan of 100 for withdrawal calculation
             
-            // Apply growth to the remaining balance
-            remainingBalance *= (1 + annualRate);
-        }
-        currentYear++; // Move to the next year
-    }
+            console.log('Current Age:', currentAge); // Log current age for debugging
+            console.log('Retirement Age:', retirementAge); // Log retirement age for debugging
+            console.log('Years After Retirement:', yearsAfterRetirement); // Log years after retirement for debugging
+            console.log('Total Value:', totalValue); // Log total value for debugging
 
-    console.log('Cash Flow Data:', cashFlowData); // Log cash flow data for debugging
+            // Calculate annual withdrawal amount
+            let annualWithdrawal = 0; // Initialize withdrawal amount
+            if (yearsAfterRetirement > 0 && totalValue > 0) {
+                annualWithdrawal = totalValue / yearsAfterRetirement; // Calculate withdrawal amount based on total value
+            }
+            
+            console.log('Annual Withdrawal:', annualWithdrawal); // Log annual withdrawal for debugging
 
-    // Step 4: Ensure the chart canvas element is correctly selected and rendered
-    const ctx = document.getElementById('cashFlowChart').getContext('2d'); // Get 2D context for cash flow chart
-
-    if (cashFlowChart) cashFlowChart.destroy(); // Destroy previous chart instance if it exists
-
-    // Step 5: Create the chart
-    cashFlowChart = new Chart(ctx, {
-        type: 'bar', // Chart type
-        data: {
-            labels: Array.from({ length: cashFlowData.length }, (_, i) => `Age ${i + currentAge}`), // Create age labels
-            datasets: [{
-                label: 'Annual Pre-tax Cash Flow', // Dataset label
-                data: cashFlowData, // Data for cash flow
-                backgroundColor: '#40A7DD', // Bar color for cash flow
-            }]
-        },
-        options: {
-            responsive: true, // Responsive chart
-            scales: {
-                y: {
-                    beginAtZero: true, // Start y-axis at zero
-                    title: {
-                        display: true, // Display y-axis title
-                        text: 'Annual Pre-tax Cash Flow ($)', // Title text
-                    },
+            // Populate cash flow data array
+            for (let i = 0; i <= 100 - currentAge; i++) {
+                if (i + currentAge < retirementAge) {
+                    cashFlowData.push(0); // No cash flow before retirement
+                } else {
+                    cashFlowData.push(annualWithdrawal); // Cash flow starts at retirement
                 }
             }
+
+            console.log('Cash Flow Data:', cashFlowData); // Log cash flow data for debugging
+
+            const ctx = document.getElementById('cashFlowChart').getContext('2d'); // Get 2D context for cash flow chart
+            if (cashFlowChart) cashFlowChart.destroy(); // Destroy previous chart instance if it exists
+            cashFlowChart = new Chart(ctx, {
+                type: 'bar', // Chart type
+                data: {
+                    labels: Array.from({ length: cashFlowData.length }, (_, i) => `Age ${i + currentAge}`), // Create age labels
+                    datasets: [{
+                        label: 'Annual Pre-tax Cash Flow', // Dataset label
+                        data: cashFlowData, // Data for cash flow
+                        backgroundColor: '#40A7DD', // Bar color for cash flow
+                    }]
+                },
+                options: {
+                    responsive: true, // Responsive chart
+                    scales: {
+                        y: {
+                            beginAtZero: true, // Start y-axis at zero
+                            title: {
+                                display: true, // Display y-axis title
+                                text: 'Annual Pre-tax Cash Flow ($)', // Title text
+                            },
+
+                        }
+                    }
+                }
+            });
         }
-    });
-}
 
         function goBack() {
             document.getElementById('resultPage').classList.remove('active'); // Hide result page
