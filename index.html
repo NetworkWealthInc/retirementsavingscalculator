@@ -400,12 +400,14 @@
         totalDiscountFactor += 1 / Math.pow(1 + annualRate, t); // Use annualRate as the growth rate
     }
 
+    console.log('Total Discount Factor:', totalDiscountFactor); // Log total discount factor for debugging
+
     // Step 2: Calculate annual withdrawal amount using the total discount factor
     let annualWithdrawal = 0;
     if (yearsAfterRetirement > 0 && totalValue > 0) {
         annualWithdrawal = totalValue / totalDiscountFactor; // Calculate annual withdrawal
     }
-    
+
     console.log('Annual Withdrawal:', annualWithdrawal); // Log annual withdrawal for debugging
 
     // Step 3: Populate cash flow data array, considering growth and withdrawals
@@ -420,6 +422,9 @@
             // After retirement, withdraw and apply growth
             cashFlowData.push(annualWithdrawal); // Cash flow for this year
             
+            // Log for each year
+            console.log(`Year ${currentYear}, Withdrawal: ${annualWithdrawal}, Remaining Balance: ${remainingBalance}`);
+
             // Reduce remaining balance by withdrawal
             remainingBalance -= annualWithdrawal;
             
@@ -431,9 +436,12 @@
 
     console.log('Cash Flow Data:', cashFlowData); // Log cash flow data for debugging
 
-    // Create the chart
+    // Step 4: Ensure the chart canvas element is correctly selected and rendered
     const ctx = document.getElementById('cashFlowChart').getContext('2d'); // Get 2D context for cash flow chart
+
     if (cashFlowChart) cashFlowChart.destroy(); // Destroy previous chart instance if it exists
+
+    // Step 5: Create the chart
     cashFlowChart = new Chart(ctx, {
         type: 'bar', // Chart type
         data: {
@@ -453,7 +461,6 @@
                         display: true, // Display y-axis title
                         text: 'Annual Pre-tax Cash Flow ($)', // Title text
                     },
-
                 }
             }
         }
