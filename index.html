@@ -392,15 +392,27 @@
     const surplusData = []; // Array to hold surplus data
     const yearsAfterRetirement = 100 - retirementAge; // Assume lifespan of 100 for withdrawal calculation
 
+    console.log('Current Age:', currentAge);
+    console.log('Retirement Age:', retirementAge);
+    console.log('Years After Retirement:', yearsAfterRetirement);
+    console.log('Total Value:', totalValue);
+    console.log('Annual Growth Rate (from calculateAndShowResult):', annualRate);
+    console.log('Cost of Living Increase:', costOfLivingIncrease);
+    console.log('Desired Annual Cash Flow:', desiredCashFlow);
+
     let totalDiscountFactor = 0;
     for (let t = 1; t <= yearsAfterRetirement; t++) {
         totalDiscountFactor += 1 / Math.pow(1 + annualRate, t);
     }
 
+    console.log('Total Discount Factor:', totalDiscountFactor);
+
     let annualWithdrawal = 0;
     if (yearsAfterRetirement > 0 && totalValue > 0) {
         annualWithdrawal = totalValue / totalDiscountFactor; 
     }
+
+    console.log('Initial Annual Withdrawal:', annualWithdrawal);
 
     let remainingBalance = totalValue;
     let currentYear = currentAge;
@@ -412,74 +424,69 @@
             shortfallData.push(0); // No shortfall before retirement
             surplusData.push(0); // No surplus before retirement
         } else {
+            // Apply cost of living increase to both withdrawals and desired cash flow
             const adjustedWithdrawal = annualWithdrawal * Math.pow(1 + costOfLivingIncrease, currentYear - retirementAge);
             const adjustedDesiredCashFlow = desiredCashFlow * Math.pow(1 + costOfLivingIncrease, currentYear - retirementAge);
 
             if (adjustedWithdrawal < adjustedDesiredCashFlow) {
-                actualCashFlowData.push(adjustedWithdrawal);
-                shortfallData.push(adjustedDesiredCashFlow - adjustedWithdrawal);
-                surplusData.push(0);
+                // Shortfall case: Only part of the desired cash flow can be withdrawn
+                actualCashFlowData.push(adjustedWithdrawal); // Blue bar reflects the actual amount withdrawn
+                shortfallData.push(adjustedDesiredCashFlow - adjustedWithdrawal); // Red bar for the shortfall amount
+                surplusData.push(0); // No surplus
             } else {
-                actualCashFlowData.push(adjustedDesiredCashFlow);
-                shortfallData.push(0);
-                surplusData.push(adjustedWithdrawal - adjustedDesiredCashFlow);
+                // Surplus case: Full desired cash flow met, surplus shown separately
+                actualCashFlowData.push(adjustedDesiredCashFlow); // Blue bar reflects the desired amount
+                shortfallData.push(0); // No shortfall
+                surplusData.push(adjustedWithdrawal - adjustedDesiredCashFlow); // Green bar for surplus amount
             }
+
+            console.log(`Year ${currentYear}, Withdrawal: ${adjustedWithdrawal.toFixed(2)}, Desired Cash Flow: ${adjustedDesiredCashFlow.toFixed(2)}, Surplus/Shortfall calculated.`);
 
             // Update remaining balance considering withdrawal and growth
             remainingBalance -= adjustedWithdrawal;
-            remainingBalance *= (1 + annualRate);
+            remainingBalance *= (1 + annualRate); // Apply growth rate to remaining balance
         }
         currentYear++;
     }
+
+    console.log('Actual Cash Flow Data:', actualCashFlowData);
+    console.log('Shortfall Data:', shortfallData);
+    console.log('Surplus Data:', surplusData);
 
     const ctx = document.getElementById('cashFlowChart').getContext('2d');
     if (cashFlowChart) cashFlowChart.destroy();
     cashFlowChart = new Chart(ctx, {
         type: 'bar',
         data: {
-            labels: Array.from({ length: actualCashFlowData.length }, (_, i) => {
-                const age = currentAge + i;
-                const year = new Date().getFullYear() + (age - currentAge);
-                return `${age} (${year})`; // Format as "Age (Year)"
-            }),
+            labels: Array.from({ length: actualCashFlowData.length }, (_, i) => `Age ${i + currentAge}`),
             datasets: [{
-                label: 'Actual Pre-tax Cash Flow',
+                label: 'Actual Pre-tax Income',
                 data: actualCashFlowData,
-                backgroundColor: '#40A7DD',
+                backgroundColor: '#40A7DD', // Blue bars for actual cash flow (withdrawals)
             },
             {
                 label: 'Shortfall',
                 data: shortfallData,
-                backgroundColor: 'red',
+                backgroundColor: 'red', // Red bars for shortfall
             },
             {
                 label: 'Surplus',
                 data: surplusData,
-                backgroundColor: 'green',
+                backgroundColor: 'green', // Green bars for surplus
             }]
         },
         options: {
             responsive: true,
             scales: {
                 x: {
-                    title: {
-                        display: true,
-                        text: 'Age (Year)'
-                    },
-                    min: currentAge, // Set minimum x-axis value to current age
-                    max: 100, // Set maximum x-axis value to 100
-                    ticks: {
-                        callback: function(value) {
-                            return value; // Show formatted age and year
-                        }
-                    }
+                    stacked: true // Enable stacking on the x-axis
                 },
                 y: {
                     beginAtZero: true,
                     stacked: true, // Enable stacking on the y-axis
                     title: {
                         display: true,
-                        text: 'Annual Pre-tax Cash Flow ($)',
+                        text: 'Annual Pre-tax Income ($)',
                     },
                 }
             }
