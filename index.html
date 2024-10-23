@@ -521,99 +521,83 @@
     doc.setFontSize(18);
     doc.text('Retirement Savings Summary', 20, 30);
 
-    // Add the savings summary to PDF
-    const savingsSummary = document.getElementById('result').textContent;
+    // Add assumptions section
     doc.setFontSize(12);
-    doc.text(savingsSummary, 20, 60);
+    doc.text('Assumptions:', 20, 60);
+    doc.setFontSize(10);
+    const assumptions = [
+        `Current Age: ${currentAge}`,
+        `Desired Retirement Age: ${retirementAge}`,
+        `Value of Registered Savings: $${registeredSavings.toFixed(2)}`,
+        `Registered Contributions: $${registeredContribution.toFixed(2)} (${registeredContributionType})`,
+        `Value of TFSA: $${tfsaSavings.toFixed(2)}`,
+        `TFSA Contributions: $${tfsaContribution.toFixed(2)} (${tfsaContributionType})`,
+        `Value of Non-registered: $${nonRegisteredSavings.toFixed(2)}`,
+        `Non-registered Contributions: $${nonRegisteredContribution.toFixed(2)} (${nonRegisteredContributionType})`,
+        `Expected Rate of Return: ${(annualRate * 100).toFixed(2)}%`
+    ];
+    assumptions.forEach((text, index) => {
+        doc.text(text, 20, 80 + index * 20);
+    });
 
-    doc.setFontSize(12); // Set font size
-    // Add Assumptions section
-    doc.text("Assumptions:", 20, 80); // Adjusted y-position for Assumptions
-    doc.setFontSize(10); // Set font size
-    doc.text(`Current Age: ${currentAge}`, 20, 100);
-    doc.text(`Desired Retirement Age: ${retirementAge}`, 20, 120);
-    doc.text(`Value of Registered Savings: $${registeredSavings.toFixed(2)}`, 20, 140);
-    doc.text(`Registered Contributions: $${registeredContribution.toFixed(2)}, ${registeredContributionType}`, 20, 160);
-    doc.text(`Value of TFSA: $${tfsaSavings.toFixed(2)}`, 20, 180);
-    doc.text(`TFSA Contributions: $${tfsaContribution.toFixed(2)}, ${tfsaContributionType}`, 20, 200);
-    doc.text(`Value of Non-registered: $${nonRegisteredSavings.toFixed(2)}`, 20, 220);
-    doc.text(`Non-registered Contributions: $${nonRegisteredContribution.toFixed(2)}, ${nonRegisteredContributionType}`, 20, 240);
-    doc.text(`Expected Rate of Return: ${annualRate * 100}%`, 20, 260);        
+    // Add space between assumptions and charts
+    let yPosition = 80 + assumptions.length * 20 + 20;
 
-    // Add space between title and charts
-    let yPosition = 280; // Adjust to give some space for the charts
-
-    // Add growth chart to PDF
+    // Add growth chart
     const growthChartCanvas = document.getElementById('growthChart');
-    const growthChartImage = growthChartCanvas.toDataURL('image/png'); // Convert chart to image
-    const chartWidth = 240; // Set chart width to 240
-    const chartHeight = 200; // Set chart height to 200
-    doc.addImage(growthChartImage, 'PNG', 20, yPosition, chartWidth, chartHeight); // Adjust position and size for growth chart
+    const growthChartImage = growthChartCanvas.toDataURL('image/png');
+    const chartWidth = 240, chartHeight = 200;
+    doc.addImage(growthChartImage, 'PNG', 20, yPosition, chartWidth, chartHeight);
 
-    // Add cash flow chart to PDF
+    // Add cash flow chart
     const cashFlowChartCanvas = document.getElementById('cashFlowChart');
-    const cashFlowChartImage = cashFlowChartCanvas.toDataURL('image/png'); // Convert chart to image
-    doc.addImage(cashFlowChartImage, 'PNG', 300, yPosition, chartWidth, chartHeight); // Adjust position and size for cash flow chart
+    const cashFlowChartImage = cashFlowChartCanvas.toDataURL('image/png');
+    doc.addImage(cashFlowChartImage, 'PNG', 300, yPosition, chartWidth, chartHeight);
 
     // Update yPosition for the next section
-    yPosition += chartHeight + 20; // Space after charts
+    yPosition += chartHeight + 20;
 
     // Add growth table to PDF using autoTable
     doc.setFontSize(14);
     doc.text('Growth Table:', 20, yPosition);
-
     yPosition += 20; // Adjust y position for table
 
     // Prepare the table headers and rows from the growth table
-    const tableBody = document.getElementById('growthTable').getElementsByTagName('tbody')[0]; // Get table body element
-    const rows = tableBody.getElementsByTagName('tr'); // Get all rows from the table
+    const tableBody = document.getElementById('growthTable').getElementsByTagName('tbody')[0];
+    const rows = tableBody.getElementsByTagName('tr');
 
-    // Extract headers from the table
-    const tableHeader = [];
-    const headers = document.getElementById('growthTable').getElementsByTagName('thead')[0].getElementsByTagName('th');
-    for (let i = 0; i < headers.length; i++) {
-        tableHeader.push(headers[i].innerText);
-    }
+    // Extract headers
+    const tableHeader = Array.from(document.getElementById('growthTable').getElementsByTagName('thead')[0].getElementsByTagName('th')).map(th => th.innerText);
+    
+    // Extract rows data
+    const tableData = Array.from(rows).map(row => Array.from(row.getElementsByTagName('td')).map(td => td.innerText));
 
-    // Extract rows data from the table
-    const tableData = [];
-    for (let i = 0; i < rows.length; i++) {
-        const row = rows[i];
-        const cells = row.getElementsByTagName('td');
-        const rowData = [];
-        for (let j = 0; j < cells.length; j++) {
-            rowData.push(cells[j].innerText);
-        }
-        tableData.push(rowData); // Push each row to the table data array
-    }
-
-    // Use autoTable plugin to add the table to the PDF
+    // Use autoTable plugin to add the table
     doc.autoTable({
-        head: [tableHeader], // Table headers
-        body: tableData, // Table rows
-        startY: yPosition, // Start position of the table
-        theme: 'grid', // Apply grid lines for table cells
+        head: [tableHeader],
+        body: tableData,
+        startY: yPosition,
+        theme: 'grid',
         styles: {
             fontSize: 8,
             cellPadding: 4,
             overflow: 'linebreak',
         },
         headStyles: {
-            fillColor: '#40A7DD', // Set header background color to match branding
+            fillColor: '#40A7DD',
         },
         columnStyles: {
-            // Apply bold text for the last column (assuming it's the last in the data)
-            [tableHeader.length - 1]: { fontStyle: 'bold' }, // Bold the last column (Total Investment Value)
+            [tableHeader.length - 1]: { fontStyle: 'bold' },
         },
-        
     });
-    
-    // Add cash flow description to PDF
-    yPosition += 20; // Adjust y position for the description
+
+    // Add cash flow description
+    yPosition += 20;
     doc.setFontSize(12);
     doc.text("Understanding Your Cash Flow Numbers:", 20, yPosition);
     yPosition += 15; // Move down for the body text
     doc.setFontSize(10);
+
     const cashFlowDescription = [
         "The cash flow numbers you see in this calculator are based on your total retirement savings and your desired annual cash flow. Here's how they were calculated:",
         "",
@@ -626,22 +610,22 @@
         "Important Note: This calculator does not take into account any taxes that may apply to your withdrawals, so the amounts presented reflect pre-tax income. It’s essential to consider how taxes might affect your actual cash flow when planning your retirement."
     ];
 
-    // Add each line of the description to the PDF
     cashFlowDescription.forEach((line, index) => {
-        doc.text(line, 20, yPosition + (index * 10)); // Adjust spacing for each line
+        doc.text(line, 20, yPosition + (index * 10));
     });
-    
+
     yPosition += (cashFlowDescription.length * 10) + 10; // Update yPosition for the next section
 
-    // Add disclaimer to the bottom of the PDF
+    // Add disclaimer
     doc.setFontSize(7);
     doc.text('Disclaimer: The information and values presented in this document are for illustration purposes only and should not be considered financial advice. Actual investment results may vary. Please consult with a financial professional for specific advice tailored to your situation.', 20, doc.internal.pageSize.height - 30, {
-        maxWidth: 550, // Ensures the text wraps within the page width
+        maxWidth: 550,
     });
 
-    // Save the PDF with the specified name
+    // Save the PDF
     doc.save('retirement_savings_summary.pdf');
 }
+
 
     </script>
 </body>
