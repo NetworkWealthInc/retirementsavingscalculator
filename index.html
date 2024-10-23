@@ -280,7 +280,7 @@
     document.getElementById('growthChart').height = 500;
     createGrowthChart(chartData, currentAge, retirementAge); // Call function to generate growth chart
     createGrowthTable(tableData); // Call function to populate the growth table
-    createCashFlowChart(totalFutureValue, retirementAge); // Call function to generate cash flow chart
+    createCashFlowChart(totalFutureValue, retirementAge, annualRate); // Call function to generate cash flow chart
 
     // Switch from calculator to result page
     document.getElementById('calculator').classList.remove('active'); // Hide the calculator page
@@ -379,7 +379,7 @@
     });
 }
 
-        function createCashFlowChart(totalValue, yearsToRetirement, annualRate) {
+    function createCashFlowChart(totalValue, yearsToRetirement, annualRate) {
     const currentAge = parseInt(document.getElementById('current-age').value); // Get current age from input
     const retirementAge = parseInt(document.getElementById('retirement-age').value); // Get retirement age from input
     
