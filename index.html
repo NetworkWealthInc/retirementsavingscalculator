@@ -458,7 +458,11 @@
     cashFlowChart = new Chart(ctx, {
         type: 'bar',
         data: {
-            labels: Array.from({ length: actualCashFlowData.length }, (_, i) => `Age ${i + currentAge}`),
+            labels: Array.from({ length: actualCashFlowData.length }, (_, i) => {
+                const age = currentAge + i;
+                const year = new Date().getFullYear() + (age - currentAge); // Calculate the year
+                return `${age} (${year})`; // Format as "Age (Year)"
+            }),
             datasets: [{
                 label: 'Actual Pre-tax Cash Flow',
                 data: actualCashFlowData,
@@ -479,14 +483,22 @@
             responsive: true,
             scales: {
                 x: {
-                    stacked: true // Enable stacking on the x-axis
+                    title: {
+                        display: true,
+                        text: 'Age (Year)' // Set x-axis label
+                    },
+                    ticks: {
+                        callback: function(value) {
+                            return value; // Show formatted age and year
+                        }
+                    }
                 },
                 y: {
                     beginAtZero: true,
                     stacked: true, // Enable stacking on the y-axis
                     title: {
                         display: true,
-                        text: 'Annual Pre-tax Income ($)',
+                        text: 'Annual Pre-tax Cash Flow ($)',
                     },
                 }
             }
