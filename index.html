@@ -387,7 +387,7 @@
     const currentAge = parseInt(document.getElementById('current-age').value); // Get current age from input
     const desiredCashFlow = parseFloat(document.getElementById('desiredCashFlow').value); // Get desired cash flow after retirement
 
-    const desiredCashFlowData = []; // Array to hold desired cash flow data (user input)
+    const actualCashFlowData = []; // Array to hold the actual cash flow (the amount withdrawn)
     const shortfallData = []; // Array to hold shortfall data
     const surplusData = []; // Array to hold surplus data
     const yearsAfterRetirement = 100 - retirementAge; // Assume lifespan of 100 for withdrawal calculation
@@ -420,7 +420,7 @@
     // Loop through each year and apply withdrawal with the cost of living increase
     for (let i = 0; i <= 100 - currentAge; i++) {
         if (currentYear < retirementAge) {
-            desiredCashFlowData.push(0); // No withdrawals before retirement
+            actualCashFlowData.push(0); // No withdrawals before retirement
             shortfallData.push(0); // No shortfall before retirement
             surplusData.push(0); // No surplus before retirement
         } else {
@@ -428,17 +428,16 @@
             const adjustedWithdrawal = annualWithdrawal * Math.pow(1 + costOfLivingIncrease, currentYear - retirementAge);
             const adjustedDesiredCashFlow = desiredCashFlow * Math.pow(1 + costOfLivingIncrease, currentYear - retirementAge);
 
-            // Add the desired cash flow (as entered by user) to the chart data
-            desiredCashFlowData.push(adjustedDesiredCashFlow); 
-
             if (adjustedWithdrawal < adjustedDesiredCashFlow) {
-                const shortfall = adjustedDesiredCashFlow - adjustedWithdrawal;
-                shortfallData.push(shortfall); // Add shortfall to the dataset
-                surplusData.push(0); // No surplus if there's a shortfall
+                // Shortfall case: Only part of the desired cash flow can be withdrawn
+                actualCashFlowData.push(adjustedWithdrawal); // Blue bar reflects the actual amount withdrawn
+                shortfallData.push(adjustedDesiredCashFlow - adjustedWithdrawal); // Red bar for the shortfall amount
+                surplusData.push(0); // No surplus
             } else {
-                const surplus = adjustedWithdrawal - adjustedDesiredCashFlow;
-                surplusData.push(surplus); // Add surplus to the dataset
-                shortfallData.push(0); // No shortfall if there's a surplus
+                // Surplus case: Full desired cash flow met, surplus shown separately
+                actualCashFlowData.push(adjustedDesiredCashFlow); // Blue bar reflects the desired amount
+                shortfallData.push(0); // No shortfall
+                surplusData.push(adjustedWithdrawal - adjustedDesiredCashFlow); // Green bar for surplus amount
             }
 
             console.log(`Year ${currentYear}, Withdrawal: ${adjustedWithdrawal.toFixed(2)}, Desired Cash Flow: ${adjustedDesiredCashFlow.toFixed(2)}, Surplus/Shortfall calculated.`);
@@ -450,7 +449,7 @@
         currentYear++;
     }
 
-    console.log('Desired Cash Flow Data:', desiredCashFlowData);
+    console.log('Actual Cash Flow Data:', actualCashFlowData);
     console.log('Shortfall Data:', shortfallData);
     console.log('Surplus Data:', surplusData);
 
@@ -459,11 +458,11 @@
     cashFlowChart = new Chart(ctx, {
         type: 'bar',
         data: {
-            labels: Array.from({ length: desiredCashFlowData.length }, (_, i) => `Age ${i + currentAge}`),
+            labels: Array.from({ length: actualCashFlowData.length }, (_, i) => `Age ${i + currentAge}`),
             datasets: [{
-                label: 'Desired Pre-tax Cash Flow',
-                data: desiredCashFlowData,
-                backgroundColor: '#40A7DD', // Blue bars for desired cash flow (user input)
+                label: 'Actual Pre-tax Cash Flow',
+                data: actualCashFlowData,
+                backgroundColor: '#40A7DD', // Blue bars for actual cash flow (withdrawals)
             },
             {
                 label: 'Shortfall',
