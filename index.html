@@ -558,12 +558,11 @@
     // Update yPosition for the next section
     yPosition += chartHeight + 20; // Space after charts
 
-    // Create a new page for the growth table
-    doc.addPage(); // Add a new page for the growth table
-
     // Add growth table to PDF using autoTable
     doc.setFontSize(14);
-    doc.text('Growth Table:', 20, 30);
+    doc.text('Growth Table:', 20, yPosition);
+
+    yPosition += 20; // Adjust y position for table
 
     // Prepare the table headers and rows from the growth table
     const tableBody = document.getElementById('growthTable').getElementsByTagName('tbody')[0]; // Get table body element
@@ -592,7 +591,7 @@
     doc.autoTable({
         head: [tableHeader], // Table headers
         body: tableData, // Table rows
-        startY: 50, // Start position of the table
+        startY: yPosition, // Start position of the table
         theme: 'grid', // Apply grid lines for table cells
         styles: {
             fontSize: 8,
@@ -609,20 +608,30 @@
         
     });
     
-    // Create a new page for the cash flow description
-    doc.addPage(); // Add a new page for the cash flow description
-
     // Add cash flow description to PDF
+    yPosition += 20; // Adjust y position for the description
     doc.setFontSize(12);
-    doc.text("Understanding Your Cash Flow Numbers:", 20, 30);
-    let descriptionYPosition = 50; // Start position for the description
+    doc.text("Understanding Your Cash Flow Numbers:", 20, yPosition);
+    yPosition += 15; // Move down for the body text
+    doc.setFontSize(10);
+    const cashFlowDescription = [
+        "The cash flow numbers you see in this calculator are based on your total retirement savings and your desired annual cash flow. Here's how they were calculated:",
+        "",
+        "1. Initial Annual Withdrawal Calculation: The calculator estimates the amount you can withdraw annually based on your total retirement savings and your expected lifespan of up to 100 years. It does this by considering a discount factor that reflects the impact of your investments growing over time.",
+        "",
+        "2. Adjusting for Cost of Living: Each year, your desired cash flow and the actual withdrawals are adjusted for a cost of living increase (default is 3.1%). This means that as inflation rises, both your desired withdrawals and the actual amounts you can take out will increase over time to help maintain your purchasing power.",
+        "",
+        "3. Shortfall and Surplus Analysis: If the adjusted amount you can withdraw is less than your desired cash flow, the difference is shown as a shortfall. Conversely, if you can withdraw more than your desired amount, the excess is represented as a surplus.",
+        "",
+        "Important Note: This calculator does not take into account any taxes that may apply to your withdrawals, so the amounts presented reflect pre-tax income. It’s essential to consider how taxes might affect your actual cash flow when planning your retirement."
+    ];
 
     // Add each line of the description to the PDF
     cashFlowDescription.forEach((line, index) => {
-        doc.text(line, 20, descriptionYPosition + (index * 10)); // Adjust spacing for each line
+        doc.text(line, 20, yPosition + (index * 10)); // Adjust spacing for each line
     });
     
-    descriptionYPosition += (cashFlowDescription.length * 10) + 10; // Update yPosition for the next section
+    yPosition += (cashFlowDescription.length * 10) + 10; // Update yPosition for the next section
 
     // Add disclaimer to the bottom of the PDF
     doc.setFontSize(7);
