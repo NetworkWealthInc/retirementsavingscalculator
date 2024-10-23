@@ -379,7 +379,7 @@
     });
 }
 
-    function createCashFlowChart(totalValue, retirementAge, annualRate) {
+    function createCashFlowChart(totalValue, retirementAge, annualRate, costOfLivingIncrease = 0.031) {
     const currentAge = parseInt(document.getElementById('current-age').value); // Get current age from input
     
     const cashFlowData = []; // Array to hold cash flow data
@@ -390,6 +390,7 @@
     console.log('Years After Retirement:', yearsAfterRetirement);
     console.log('Total Value:', totalValue);
     console.log('Annual Growth Rate (from calculateAndShowResult):', annualRate);
+    console.log('Cost of Living Increase:', costOfLivingIncrease); // Log cost of living increase
 
     let totalDiscountFactor = 0;
     for (let t = 1; t <= yearsAfterRetirement; t++) {
@@ -403,19 +404,25 @@
         annualWithdrawal = totalValue / totalDiscountFactor; 
     }
 
-    console.log('Annual Withdrawal:', annualWithdrawal);
+    console.log('Initial Annual Withdrawal:', annualWithdrawal);
 
     let remainingBalance = totalValue;
     let currentYear = currentAge;
 
+    // Loop through each year and apply withdrawal with the cost of living increase
     for (let i = 0; i <= 100 - currentAge; i++) {
         if (currentYear < retirementAge) {
-            cashFlowData.push(0);
+            cashFlowData.push(0); // No withdrawals before retirement
         } else {
-            cashFlowData.push(annualWithdrawal);
-            console.log(`Year ${currentYear}, Withdrawal: ${annualWithdrawal}, Remaining Balance: ${remainingBalance}`);
-            remainingBalance -= annualWithdrawal;
-            remainingBalance *= (1 + annualRate);
+            // Apply cost of living increase
+            const adjustedWithdrawal = annualWithdrawal * Math.pow(1 + costOfLivingIncrease, currentYear - retirementAge);
+            cashFlowData.push(adjustedWithdrawal); // Add adjusted withdrawal to cash flow data
+
+            console.log(`Year ${currentYear}, Withdrawal: ${adjustedWithdrawal.toFixed(2)}, Remaining Balance: ${remainingBalance.toFixed(2)}`);
+
+            // Update remaining balance considering withdrawal and growth
+            remainingBalance -= adjustedWithdrawal;
+            remainingBalance *= (1 + annualRate); // Apply growth rate to remaining balance
         }
         currentYear++;
     }
