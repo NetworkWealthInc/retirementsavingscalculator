@@ -166,48 +166,55 @@
     </div>
 
     <div class="result" id="result"></div> <!-- Div to display the result of the calculations -->
-    
-    <!-- Order updated here: Growth Chart, Growth Table, Cash Flow Chart, Cash Flow Table -->
-    <canvas id="growthChart" width="500" height="250"></canvas> <!-- Canvas for the growth chart -->
-    
-    <!-- Container for the Growth Table -->
-    <div class="table-container"> 
-        <table id="growthTable"> <!-- Table to display the growth data -->
-            <thead>
-                <tr>
-                    <th>Year</th> <!-- Table header for year -->
-                    <th>Age</th> <!-- Table header for age -->
-                    <th>Registered Starting Value</th> <!-- Table header for registered savings starting value -->
-                    <th>Registered Contribution</th> <!-- Table header for registered savings contribution -->
-                    <th>Registered Savings</th> <!-- Table header for registered savings value -->
-                    <th>TFSA Starting Value</th> <!-- Table header for TFSA starting value -->
-                    <th>TFSA Contribution</th> <!-- Table header for TFSA contribution -->
-                    <th>TFSA Value</th> <!-- Table header for TFSA value -->
-                    <th>Non-Registered Starting Value</th> <!-- Table header for non-registered starting value -->
-                    <th>Non-Registered Contribution</th> <!-- Table header for non-registered contribution -->
-                    <th>Non-Registered Value</th> <!-- Table header for non-registered value -->
-                    <th>Total Investment Value</th> <!-- Table header for total investment value -->
-                </tr>
-            </thead>
-            <tbody>
-                <!-- Data will be populated here dynamically for the growth table -->
-            </tbody>
-        </table>
-    </div>
 
-    <canvas id="cashFlowChart" width="500" height="250"></canvas> <!-- Canvas for the cash flow chart -->
+    <!-- Growth Section -->
+    <section class="growth-section"> <!-- Section for Growth Chart and Table -->
+        <h2>Growth Overview</h2> <!-- Heading for the growth section -->
+        <canvas id="growthChart" width="500" height="250"></canvas> <!-- Canvas for the growth chart -->
+        
+        <!-- Container for the Growth Table -->
+        <div class="table-container"> 
+            <table id="growthTable"> <!-- Table to display the growth data -->
+                <thead>
+                    <tr>
+                        <th>Year</th> <!-- Table header for year -->
+                        <th>Age</th> <!-- Table header for age -->
+                        <th>Registered Starting Value</th> <!-- Table header for registered savings starting value -->
+                        <th>Registered Contribution</th> <!-- Table header for registered savings contribution -->
+                        <th>Registered Savings</th> <!-- Table header for registered savings value -->
+                        <th>TFSA Starting Value</th> <!-- Table header for TFSA starting value -->
+                        <th>TFSA Contribution</th> <!-- Table header for TFSA contribution -->
+                        <th>TFSA Value</th> <!-- Table header for TFSA value -->
+                        <th>Non-Registered Starting Value</th> <!-- Table header for non-registered starting value -->
+                        <th>Non-Registered Contribution</th> <!-- Table header for non-registered contribution -->
+                        <th>Non-Registered Value</th> <!-- Table header for non-registered value -->
+                        <th>Total Investment Value</th> <!-- Table header for total investment value -->
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Data will be populated here dynamically for the growth table -->
+                </tbody>
+            </table>
+        </div>
+    </section>
 
-    <!-- Separate Container for the Cash Flow Table -->
-    <div class="table-container"> 
-        <table id="cashFlowTable" class="table table-striped"> <!-- Table to display the cash flow data -->
-            <thead id="cashFlowTableHead">
-            <!-- Header for cash flow will be dynamically generated in JavaScript -->
-            </thead>
-            <tbody id="cashFlowTableBody">
-            <!-- Rows will be dynamically added here for the cash flow table -->
-            </tbody>
-        </table>
-    </div>
+    <!-- Cash Flow Section -->
+    <section class="cash-flow-section"> <!-- Section for Cash Flow Chart and Table -->
+        <h2>Cash Flow Overview</h2> <!-- Heading for the cash flow section -->
+        <canvas id="cashFlowChart" width="500" height="250"></canvas> <!-- Canvas for the cash flow chart -->
+
+        <!-- Separate Container for the Cash Flow Table -->
+        <div class="table-container"> 
+            <table id="cashFlowTable" class="table table-striped"> <!-- Table to display the cash flow data -->
+                <thead id="cashFlowTableHead">
+                <!-- Header for cash flow will be dynamically generated in JavaScript -->
+                </thead>
+                <tbody id="cashFlowTableBody">
+                <!-- Rows will be dynamically added here for the cash flow table -->
+                </tbody>
+            </table>
+        </div>
+    </section>
 </div>
 </div>
 
