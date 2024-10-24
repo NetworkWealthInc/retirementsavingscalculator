@@ -456,10 +456,14 @@
 
     const ctx = document.getElementById('cashFlowChart').getContext('2d');
     if (cashFlowChart) cashFlowChart.destroy();
+
+    // Update chart labels to start at retirement age
+    const chartLabels = Array.from({ length: actualCashFlowData.length }, (_, i) => `Age ${i + retirementAge}`);
+
     cashFlowChart = new Chart(ctx, {
         type: 'bar',
         data: {
-            labels: Array.from({ length: actualCashFlowData.length }, (_, i) => `Age ${i + currentAge}`),
+            labels: chartLabels, // Updated to reflect retirement age onwards
             datasets: [{
                 label: 'Actual Pre-tax Income',
                 data: actualCashFlowData,
@@ -493,7 +497,8 @@
             }
         }
     });
-        // Call function to generate cash flow table
+
+    // Call function to generate cash flow table
     generateCashFlowTable(actualCashFlowData, shortfallData, surplusData, currentAge);
 }
 
