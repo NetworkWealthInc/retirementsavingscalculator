@@ -410,12 +410,12 @@
 
     function createCashFlowChart(totalValue, retirementAge, annualRate, inflationRate = 0.031) {
     const currentAge = parseInt(document.getElementById('current-age').value);
-    const startingWithdrawal = parseFloat(document.getElementById('desiredCashFlow').value); // Desired cash flow as starting withdrawal
+    const startingWithdrawal = parseFloat(document.getElementById('desiredCashFlow').value);
     const yearsAfterRetirement = 100 - retirementAge;
 
-    const actualCashFlowData = []; // Actual cash flow (withdrawals)
-    const shortfallData = []; // Shortfall data
-    const surplusData = []; // Surplus data
+    const actualCashFlowData = [];
+    const shortfallData = [];
+    const surplusData = [];
     let remainingBalance = totalValue;
 
     console.log('Current Age:', currentAge);
@@ -428,27 +428,34 @@
 
     // Loop through each year from retirement age to age 100
     for (let age = retirementAge; age <= 100; age++) {
-        // Calculate the adjusted withdrawal for the current year
         const adjustedWithdrawal = startingWithdrawal * Math.pow(1 + inflationRate, age - retirementAge);
         
-        // Check if the remaining balance can cover the withdrawal
         if (remainingBalance < adjustedWithdrawal) {
-            actualCashFlowData.push(remainingBalance); // Withdraw whatever is left
-            shortfallData.push(adjustedWithdrawal - remainingBalance); // Record shortfall
-            surplusData.push(0); // No surplus
-            remainingBalance = 0; // Balance depleted
+            actualCashFlowData.push(remainingBalance);
+            shortfallData.push(adjustedWithdrawal - remainingBalance);
+            surplusData.push(0);
+            remainingBalance = 0;
         } else {
-            actualCashFlowData.push(adjustedWithdrawal); // Full withdrawal
-            shortfallData.push(0); // No shortfall
-            surplusData.push(0); // No surplus
-            remainingBalance -= adjustedWithdrawal; // Deduct withdrawal
+            actualCashFlowData.push(adjustedWithdrawal);
+            shortfallData.push(0);
+            surplusData.push(0);
+            remainingBalance -= adjustedWithdrawal;
         }
 
-        // Apply growth to the remaining balance after withdrawal
         remainingBalance *= (1 + annualRate);
 
-        // Log for debugging
         console.log(`Age ${age}: Withdrawal: ${adjustedWithdrawal.toFixed(2)}, Remaining Balance: ${remainingBalance.toFixed(2)}`);
+    }
+
+    // Check for any remaining balance as surplus
+    if (remainingBalance > 0) {
+        actualCashFlowData.push(remainingBalance);
+        shortfallData.push(0);
+        surplusData.push(remainingBalance);
+    } else {
+        actualCashFlowData.push(0);
+        shortfallData.push(0);
+        surplusData.push(0);
     }
 
     console.log('Actual Cash Flow Data:', actualCashFlowData);
@@ -458,7 +465,6 @@
     const ctx = document.getElementById('cashFlowChart').getContext('2d');
     if (cashFlowChart) cashFlowChart.destroy();
 
-    // Create chart labels
     const chartLabels = Array.from({ length: yearsAfterRetirement + 1 }, (_, i) => `Age ${i + retirementAge}`);
 
     cashFlowChart = new Chart(ctx, {
@@ -499,7 +505,6 @@
         }
     });
 
-    // Call function to generate cash flow table
     generateCashFlowTable(actualCashFlowData, shortfallData, surplusData, retirementAge);
 }
 
