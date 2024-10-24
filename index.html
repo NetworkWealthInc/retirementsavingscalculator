@@ -99,18 +99,18 @@
     <div class="calculator active" id="calculator"> <!-- Calculator section is initially active -->
         <h1>Retirement Savings Calculator</h1> <!-- Main heading for the calculator -->
 
-        <label for="current-age">Current Age</label> <!-- Label for current age input -->
-        <input type="number" id="current-age" min="0" max="100"> <!-- Input for current age -->
+        <label for="current-age">Current Age</label>
+        <input type="number" id="current-age" min="0" max="100" placeholder="Enter your current age">
 
-        <label for="retirement-age">Desired Retirement Age</label> <!-- Label for retirement age input -->
-        <input type="number" id="retirement-age" min="0" max="100"> <!-- Input for retirement age -->
+        <label for="retirement-age">Desired Retirement Age</label>
+        <input type="number" id="retirement-age" min="0" max="100" placeholder="Enter your desired retirement age">
 
         <!-- Registered Retirement Savings -->
-        <label for="registered-savings">Total Value of Registered Retirement Savings (RRSP, Spousal RRSP, RIF, LIF, LIRA, etc.)</label> <!-- Label for registered savings input -->
-        <input type="number" id="registered-savings" min="0"> <!-- Input for registered savings amount -->
+        <label for="registered-savings">Total Value of Registered Retirement Savings (RRSP, Spousal RRSP, RIF, LIF, LIRA, etc.)</label>
+        <input type="number" id="registered-savings" min="0" placeholder="Enter total value of registered savings">
 
-        <label for="registered-contribution">Contributions</label> <!-- Label for registered contribution input -->
-        <input type="number" id="registered-contribution" min="0"> <!-- Input for registered contribution amount -->
+        <label for="registered-contribution">Contributions</label>
+        <input type="number" id="registered-contribution" min="0" placeholder="Enter contribution amount">
 
         <label for="registered-contribution-type">Registered Savings Contribution Frequency</label> <!-- Label for contribution type -->
         <select id="registered-contribution-type"> <!-- Dropdown for selecting contribution frequency -->
@@ -119,11 +119,11 @@
         </select>
 
         <!-- TFSA Savings -->
-        <label for="tfsa-savings">Total Value of Tax-Free Savings Accounts (TFSAs)</label> <!-- Label for TFSA savings input -->
-        <input type="number" id="tfsa-savings" min="0"> <!-- Input for TFSA savings amount -->
+        <label for="tfsa-savings">Total Value of Tax-Free Savings Accounts (TFSAs)</label>
+        <input type="number" id="tfsa-savings" min="0" placeholder="Enter total value of TFSAs">
 
-        <label for="tfsa-contribution">Contributions</label> <!-- Label for TFSA contribution input -->
-        <input type="number" id="tfsa-contribution" min="0"> <!-- Input for TFSA contribution amount -->
+        <label for="tfsa-contribution">Contributions</label>
+        <input type="number" id="tfsa-contribution" min="0" placeholder="Enter contribution amount">
 
         <label for="tfsa-contribution-type">TFSA Contribution Frequency</label> <!-- Label for TFSA contribution type -->
         <select id="tfsa-contribution-type"> <!-- Dropdown for selecting contribution frequency -->
@@ -132,11 +132,11 @@
         </select>
 
         <!-- Non-Registered Savings -->
-        <label for="non-registered-savings">Total Value of Non-Registered Savings (Cash, Margin, Corporate, etc.)</label> <!-- Label for non-registered savings input -->
-        <input type="number" id="non-registered-savings" min="0"> <!-- Input for non-registered savings amount -->
+        <label for="non-registered-savings">Total Value of Non-Registered Savings (Cash, Margin, Corporate, etc.)</label>
+        <input type="number" id="non-registered-savings" min="0" placeholder="Enter total value of non-registered savings">
 
-        <label for="non-registered-contribution">Contributions</label> <!-- Label for non-registered contribution input -->
-        <input type="number" id="non-registered-contribution" min="0"> <!-- Input for non-registered contribution amount -->
+        <label for="non-registered-contribution">Contributions</label>
+        <input type="number" id="non-registered-contribution" min="0" placeholder="Enter contribution amount">
 
         <label for="non-registered-contribution-type">Non-Registered Contribution Frequency</label> <!-- Label for non-registered contribution type -->
         <select id="non-registered-contribution-type"> <!-- Dropdown for selecting contribution frequency -->
@@ -145,8 +145,8 @@
         </select>
 
         <!-- Rate of Return -->
-        <label for="annual-rate">Expected Annual Rate of Return (%)</label> <!-- Label for expected rate of return input -->
-        <input type="number" id="annual-rate" step="0.01" min="0"> <!-- Input for annual rate of return -->
+        <label for="annual-rate">Expected Annual Rate of Return (%)</label>
+        <input type="number" id="annual-rate" step="0.01" min="0" placeholder="Enter expected rate of return">
 
         <!-- Desired Cash Flow -->
         <label for="desiredCashFlow">Desired Pre-tax Income At Retirement (Annual):</label>
