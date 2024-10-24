@@ -577,6 +577,7 @@ function generateCashFlowTable(actualCashFlowData, shortfallData, surplusData, r
         if (hasShortfall) {
             const shortfallCell = document.createElement('td');
             shortfallCell.textContent = `$${shortfall}`;
+            shortfallCell.style.color = 'red'; // Set text color to red for shortfall
             row.appendChild(shortfallCell);
         }
 
@@ -584,6 +585,7 @@ function generateCashFlowTable(actualCashFlowData, shortfallData, surplusData, r
         if (hasSurplus) {
             const surplusCell = document.createElement('td');
             surplusCell.textContent = `$${surplus}`;
+            surplusCell.style.color = 'green'; // Set text color to green for surplus
             row.appendChild(surplusCell);
         }
 
