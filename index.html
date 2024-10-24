@@ -516,7 +516,7 @@
 }
 
        // Function to generate cash flow table
-function generateCashFlowTable(actualCashFlowData, shortfallData, surplusData, retirementAge) {
+function generateCashFlowTable(actualCashFlowData, shortfallData, surplusData, currentAge, retirementAge) {
     const tableBody = document.getElementById('cashFlowTableBody');
     const tableHead = document.getElementById('cashFlowTableHead'); // Assuming thead has this ID
 
@@ -530,6 +530,10 @@ function generateCashFlowTable(actualCashFlowData, shortfallData, surplusData, r
 
     // Build the table header dynamically based on the columns we need
     const headerRow = document.createElement('tr');
+
+    const yearHeader = document.createElement('th');
+    yearHeader.textContent = 'Year';
+    headerRow.appendChild(yearHeader);
 
     const ageHeader = document.createElement('th');
     ageHeader.textContent = 'Age';
@@ -553,15 +557,30 @@ function generateCashFlowTable(actualCashFlowData, shortfallData, surplusData, r
 
     tableHead.appendChild(headerRow);
 
+    // Utility function to format numbers with commas
+    function formatNumberWithCommas(value) {
+        return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    }
+
+    // Calculate the starting year based on retirement age and current age
+    const currentYear = new Date().getFullYear();
+    const retirementYear = currentYear + (retirementAge - currentAge);
+
     // Build table rows
     for (let i = 0; i < actualCashFlowData.length; i++) {
+        const year = retirementYear + i;  // Year column
         const age = retirementAge + i;
-        const actualCashFlow = actualCashFlowData[i].toFixed(2);
-        const shortfall = shortfallData[i].toFixed(2);
-        const surplus = surplusData[i].toFixed(2);
+        const actualCashFlow = formatNumberWithCommas(actualCashFlowData[i].toFixed(2));
+        const shortfall = formatNumberWithCommas(shortfallData[i].toFixed(2));
+        const surplus = formatNumberWithCommas(surplusData[i].toFixed(2));
 
         // Create a new row
         const row = document.createElement('tr');
+
+        // Year column
+        const yearCell = document.createElement('td');
+        yearCell.textContent = year;
+        row.appendChild(yearCell);
 
         // Age column
         const ageCell = document.createElement('td');
