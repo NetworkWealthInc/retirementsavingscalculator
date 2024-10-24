@@ -168,7 +168,9 @@
     <div class="result" id="result"></div> <!-- Div to display the result of the calculations -->
     <canvas id="growthChart" width="500" height="250"></canvas> <!-- Canvas for the growth chart -->
     <canvas id="cashFlowChart" width="500" height="250"></canvas> <!-- Canvas for the cash flow chart -->
-    <div class="table-container"> <!-- Container to hold the growth table -->
+    
+    <!-- Container for the Growth Table -->
+    <div class="table-container"> 
         <table id="growthTable"> <!-- Table to display the growth data -->
             <thead>
                 <tr>
@@ -185,13 +187,16 @@
                     <th>Non-Registered Value</th> <!-- Table header for non-registered value -->
                     <th>Total Investment Value</th> <!-- Table header for total investment value -->
                 </tr>
-            </thead> 
-        <div id="cashFlowTable"></div>
+            </thead>
             <tbody>
-                <!-- Data will be populated here -->
+                <!-- Data will be populated here dynamically for the growth table -->
             </tbody>
         </table>
-        <table id="cashFlowTable" class="table table-striped">
+    </div>
+
+    <!-- Separate Container for the Cash Flow Table -->
+    <div class="table-container"> 
+        <table id="cashFlowTable" class="table table-striped"> <!-- Table to display the cash flow data -->
             <thead>
                 <tr>
                     <th>Age</th>
@@ -201,8 +206,8 @@
                 </tr>
             </thead>
             <tbody id="cashFlowTableBody">
-        <!-- Rows will be added here dynamically -->
-        </tbody>
+                <!-- Rows will be added here dynamically for the cash flow table -->
+            </tbody>
         </table>
     </div>
 </div>
