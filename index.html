@@ -524,6 +524,10 @@ function generateCashFlowTable(actualCashFlowData, shortfallData, surplusData, c
     tableBody.innerHTML = '';
     tableHead.innerHTML = '';
 
+    // Ensure currentAge and retirementAge are parsed as integers
+    currentAge = parseInt(currentAge);
+    retirementAge = parseInt(retirementAge);
+
     // Determine if we need to show Shortfall and Surplus columns
     const hasShortfall = shortfallData.some(value => value > 0);
     const hasSurplus = surplusData.some(value => value > 0);
@@ -569,7 +573,7 @@ function generateCashFlowTable(actualCashFlowData, shortfallData, surplusData, c
     // Build table rows
     for (let i = 0; i < actualCashFlowData.length; i++) {
         const year = retirementYear + i;  // Year column
-        const age = retirementAge + i;
+        const age = retirementAge + i;    // Age column
         const actualCashFlow = formatNumberWithCommas(actualCashFlowData[i].toFixed(2));
         const shortfall = formatNumberWithCommas(shortfallData[i].toFixed(2));
         const surplus = formatNumberWithCommas(surplusData[i].toFixed(2));
