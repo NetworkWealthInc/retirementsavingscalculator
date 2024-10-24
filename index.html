@@ -498,7 +498,7 @@
 }
 
        // Function to generate cash flow table
-function generateCashFlowTable(actualCashFlowData, shortfallData, surplusData, currentAge) {
+function generateCashFlowTable(actualCashFlowData, shortfallData, surplusData, currentAge, retirementAge) {
     const tableContainer = document.getElementById('cashFlowTable'); // Make sure you have a div with this ID in your HTML
     tableContainer.innerHTML = ''; // Clear previous table content
 
@@ -514,11 +514,14 @@ function generateCashFlowTable(actualCashFlowData, shortfallData, surplusData, c
     });
     table.appendChild(headerRow);
 
-    // Populate table rows with data
-    for (let i = 0; i < actualCashFlowData.length; i++) {
+    // Calculate the index to start from retirement age
+    const startIndex = retirementAge - currentAge;
+
+    // Populate table rows with data starting from retirement age
+    for (let i = startIndex; i < actualCashFlowData.length; i++) {
         const row = document.createElement('tr');
         const ageCell = document.createElement('td');
-        ageCell.textContent = `Age ${i + currentAge}`;
+        ageCell.textContent = `Age ${i + currentAge}`; // Age reflects current age plus index
 
         const actualIncomeCell = document.createElement('td');
         actualIncomeCell.textContent = `$${actualCashFlowData[i].toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
