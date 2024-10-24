@@ -596,7 +596,7 @@ function generateCashFlowTable(actualCashFlowData, shortfallData, surplusData, r
              // Calculate and add Total Attainable Income column
             const totalIncome = (Number(actualCashFlow) + Number(surplus)).toFixed(2);
             const totalIncomeCell = document.createElement('td');
-            totalIncomeCell.textContent = `$${Number(totalIncome).toLocaleString()}`; // Format with commas
+            totalIncomeCell.innerHTML = `<strong>$${Number(totalIncome).toLocaleString()}</strong>`; // Format with commas
             row.appendChild(totalIncomeCell);
         }
 
