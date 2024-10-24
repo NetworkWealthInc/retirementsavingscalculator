@@ -197,16 +197,11 @@
     <!-- Separate Container for the Cash Flow Table -->
     <div class="table-container"> 
         <table id="cashFlowTable" class="table table-striped"> <!-- Table to display the cash flow data -->
-            <thead>
-                <tr>
-                    <th>Age</th>
-                    <th>Actual Pre-tax Income ($)</th>
-                    <th>Shortfall ($)</th>
-                    <th>Surplus ($)</th>
-                </tr>
+            <thead id="cashFlowTableHead">
+            <!-- Header for cash flow will be dynamically generated in JavaScript -->
             </thead>
             <tbody id="cashFlowTableBody">
-                <!-- Rows will be added here dynamically for the cash flow table -->
+            <!-- Rows will be dynamically added here for the cash flow table -->
             </tbody>
         </table>
     </div>
@@ -522,37 +517,75 @@
 
        // Function to generate cash flow table
 function generateCashFlowTable(actualCashFlowData, shortfallData, surplusData, retirementAge) {
-    const tableBody = document.getElementById('cashFlowTableBody'); // Assuming there's a table body with this ID
-    tableBody.innerHTML = ''; // Clear any previous data
+    const tableBody = document.getElementById('cashFlowTableBody');
+    const tableHead = document.getElementById('cashFlowTableHead'); // Assuming thead has this ID
 
+    // Clear previous table content
+    tableBody.innerHTML = '';
+    tableHead.innerHTML = '';
+
+    // Determine if we need to show Shortfall and Surplus columns
+    const hasShortfall = shortfallData.some(value => value > 0);
+    const hasSurplus = surplusData.some(value => value > 0);
+
+    // Build the table header dynamically based on the columns we need
+    const headerRow = document.createElement('tr');
+
+    const ageHeader = document.createElement('th');
+    ageHeader.textContent = 'Age';
+    headerRow.appendChild(ageHeader);
+
+    const actualCashFlowHeader = document.createElement('th');
+    actualCashFlowHeader.textContent = 'Actual Pre-tax Income ($)';
+    headerRow.appendChild(actualCashFlowHeader);
+
+    if (hasShortfall) {
+        const shortfallHeader = document.createElement('th');
+        shortfallHeader.textContent = 'Shortfall ($)';
+        headerRow.appendChild(shortfallHeader);
+    }
+
+    if (hasSurplus) {
+        const surplusHeader = document.createElement('th');
+        surplusHeader.textContent = 'Surplus ($)';
+        headerRow.appendChild(surplusHeader);
+    }
+
+    tableHead.appendChild(headerRow);
+
+    // Build table rows
     for (let i = 0; i < actualCashFlowData.length; i++) {
         const age = retirementAge + i;
-        const actualCashFlow = actualCashFlowData[i].toFixed(2); // Round to two decimal places
+        const actualCashFlow = actualCashFlowData[i].toFixed(2);
         const shortfall = shortfallData[i].toFixed(2);
         const surplus = surplusData[i].toFixed(2);
 
         // Create a new row
         const row = document.createElement('tr');
 
-        // Create and append the Age cell
+        // Age column
         const ageCell = document.createElement('td');
         ageCell.textContent = age;
         row.appendChild(ageCell);
 
-        // Create and append the Actual Pre-tax Income cell
+        // Actual Pre-tax Income column
         const actualCashFlowCell = document.createElement('td');
-        actualCashFlowCell.textContent = `$${actualCashFlow}`; // Add dollar sign and format value
+        actualCashFlowCell.textContent = `$${actualCashFlow}`;
         row.appendChild(actualCashFlowCell);
 
-        // Create and append the Shortfall cell
-        const shortfallCell = document.createElement('td');
-        shortfallCell.textContent = `$${shortfall}`; // Add dollar sign and format value
-        row.appendChild(shortfallCell);
+        // Only add Shortfall column if it exists
+        if (hasShortfall) {
+            const shortfallCell = document.createElement('td');
+            shortfallCell.textContent = `$${shortfall}`;
+            row.appendChild(shortfallCell);
+        }
 
-        // Create and append the Surplus cell
-        const surplusCell = document.createElement('td');
-        surplusCell.textContent = `$${surplus}`; // Add dollar sign and format value
-        row.appendChild(surplusCell);
+        // Only add Surplus column if it exists
+        if (hasSurplus) {
+            const surplusCell = document.createElement('td');
+            surplusCell.textContent = `$${surplus}`;
+            row.appendChild(surplusCell);
+        }
 
         // Append the row to the table body
         tableBody.appendChild(row);
