@@ -570,13 +570,13 @@ function generateCashFlowTable(actualCashFlowData, shortfallData, surplusData, r
 
         // Actual Pre-tax Income column
         const actualCashFlowCell = document.createElement('td');
-        actualCashFlowCell.textContent = `$${actualCashFlow}`;
+        actualCashFlowCell.textContent = `$${Number(actualCashFlow).toLocaleString()}`; // Format with commas
         row.appendChild(actualCashFlowCell);
 
         // Only add Shortfall column if it exists
         if (hasShortfall) {
             const shortfallCell = document.createElement('td');
-            shortfallCell.textContent = `$${shortfall}`;
+            shortfallCell.textContent = `$${Number(shortfall).toLocaleString()}`; // Format with commas
             shortfallCell.style.color = 'red'; // Set text color to red for shortfall
             row.appendChild(shortfallCell);
         }
@@ -584,7 +584,7 @@ function generateCashFlowTable(actualCashFlowData, shortfallData, surplusData, r
         // Only add Surplus column if it exists
         if (hasSurplus) {
             const surplusCell = document.createElement('td');
-            surplusCell.textContent = `$${surplus}`;
+            surplusCell.textContent = `$${Number(surplus).toLocaleString()}`; // Format with commas
             surplusCell.style.color = 'green'; // Set text color to green for surplus
             row.appendChild(surplusCell);
         }
