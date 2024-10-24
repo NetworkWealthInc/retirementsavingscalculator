@@ -191,6 +191,19 @@
                 <!-- Data will be populated here -->
             </tbody>
         </table>
+        <table id="cashFlowTable" class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Age</th>
+                    <th>Actual Pre-tax Income ($)</th>
+                    <th>Shortfall ($)</th>
+                    <th>Surplus ($)</th>
+                </tr>
+            </thead>
+            <tbody id="cashFlowTableBody">
+        <!-- Rows will be added here dynamically -->
+        </tbody>
+        </table>
     </div>
 </div>
 
@@ -503,49 +516,42 @@
 }
 
        // Function to generate cash flow table
-function generateCashFlowTable(actualCashFlowData, shortfallData, surplusData, currentAge, retirementAge) {
-    const tableContainer = document.getElementById('cashFlowTable'); // Make sure you have a div with this ID in your HTML
-    tableContainer.innerHTML = ''; // Clear previous table content
+function generateCashFlowTable(actualCashFlowData, shortfallData, surplusData, retirementAge) {
+    const tableBody = document.getElementById('cashFlowTableBody'); // Assuming there's a table body with this ID
+    tableBody.innerHTML = ''; // Clear any previous data
 
-    // Create table and headers
-    const table = document.createElement('table');
-    const headerRow = document.createElement('tr');
+    for (let i = 0; i < actualCashFlowData.length; i++) {
+        const age = retirementAge + i;
+        const actualCashFlow = actualCashFlowData[i].toFixed(2); // Round to two decimal places
+        const shortfall = shortfallData[i].toFixed(2);
+        const surplus = surplusData[i].toFixed(2);
 
-    const headers = ['Age', 'Actual Pre-tax Income', 'Shortfall', 'Surplus'];
-    headers.forEach(header => {
-        const th = document.createElement('th');
-        th.textContent = header;
-        headerRow.appendChild(th);
-    });
-    table.appendChild(headerRow);
-
-    // Calculate the index to start from retirement age
-    const startIndex = retirementAge - currentAge;
-
-    // Populate table rows with data starting from retirement age
-    for (let i = startIndex; i < actualCashFlowData.length; i++) {
+        // Create a new row
         const row = document.createElement('tr');
+
+        // Create and append the Age cell
         const ageCell = document.createElement('td');
-        ageCell.textContent = `Age ${i + currentAge}`; // Age reflects current age plus index
-
-        const actualIncomeCell = document.createElement('td');
-        actualIncomeCell.textContent = `$${actualCashFlowData[i].toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
-
-        const shortfallCell = document.createElement('td');
-        shortfallCell.textContent = `$${shortfallData[i].toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
-
-        const surplusCell = document.createElement('td');
-        surplusCell.textContent = `$${surplusData[i].toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
-
+        ageCell.textContent = age;
         row.appendChild(ageCell);
-        row.appendChild(actualIncomeCell);
-        row.appendChild(shortfallCell);
-        row.appendChild(surplusCell);
-        table.appendChild(row);
-    }
 
-    // Append the table to the container
-    tableContainer.appendChild(table);
+        // Create and append the Actual Pre-tax Income cell
+        const actualCashFlowCell = document.createElement('td');
+        actualCashFlowCell.textContent = `$${actualCashFlow}`; // Add dollar sign and format value
+        row.appendChild(actualCashFlowCell);
+
+        // Create and append the Shortfall cell
+        const shortfallCell = document.createElement('td');
+        shortfallCell.textContent = `$${shortfall}`; // Add dollar sign and format value
+        row.appendChild(shortfallCell);
+
+        // Create and append the Surplus cell
+        const surplusCell = document.createElement('td');
+        surplusCell.textContent = `$${surplus}`; // Add dollar sign and format value
+        row.appendChild(surplusCell);
+
+        // Append the row to the table body
+        tableBody.appendChild(row);
+    }
 }
        
         function goBack() {
