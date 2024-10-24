@@ -549,6 +549,11 @@ function generateCashFlowTable(actualCashFlowData, shortfallData, surplusData, r
         const surplusHeader = document.createElement('th');
         surplusHeader.textContent = 'Surplus ($)';
         headerRow.appendChild(surplusHeader);
+
+        // Add Total Attainable Income header if there is a surplus
+        const totalIncomeHeader = document.createElement('th');
+        totalIncomeHeader.textContent = 'Total Attainable Income ($)';
+        headerRow.appendChild(totalIncomeHeader);
     }
 
     tableHead.appendChild(headerRow);
@@ -587,6 +592,12 @@ function generateCashFlowTable(actualCashFlowData, shortfallData, surplusData, r
             surplusCell.textContent = `$${Number(surplus).toLocaleString()}`; // Format with commas
             surplusCell.style.color = 'green'; // Set text color to green for surplus
             row.appendChild(surplusCell);
+
+             // Calculate and add Total Attainable Income column
+            const totalIncome = (Number(actualCashFlow) + Number(surplus)).toFixed(2);
+            const totalIncomeCell = document.createElement('td');
+            totalIncomeCell.textContent = `$${Number(totalIncome).toLocaleString()}`; // Format with commas
+            row.appendChild(totalIncomeCell);
         }
 
         // Append the row to the table body
