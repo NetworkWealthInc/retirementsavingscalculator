@@ -530,15 +530,15 @@
     doc.text('Assumptions:', 20, 60);
     doc.setFontSize(10);
     const assumptions = [
-        `Current Age: ${currentAge}`,
-        `Desired Retirement Age: ${retirementAge}`,
-        `Value of Registered Savings: $${registeredSavings.toFixed(2)}`,
-        `Registered Contributions: $${registeredContribution.toFixed(2)} (${registeredContributionType})`,
-        `Value of TFSA: $${tfsaSavings.toFixed(2)}`,
-        `TFSA Contributions: $${tfsaContribution.toFixed(2)} (${tfsaContributionType})`,
-        `Value of Non-registered: $${nonRegisteredSavings.toFixed(2)}`,
-        `Non-registered Contributions: $${nonRegisteredContribution.toFixed(2)} (${nonRegisteredContributionType})`,
-        `Expected Rate of Return: ${(annualRate * 100).toFixed(2)}%`
+    `Current Age: ${currentAge}`,
+    `Desired Retirement Age: ${retirementAge}`,
+    `Value of Registered Savings: $${registeredSavings.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`,
+    `Registered Contributions: $${registeredContribution.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })} (${registeredContributionType})`,
+    `Value of TFSA: $${tfsaSavings.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`,
+    `TFSA Contributions: $${tfsaContribution.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })} (${tfsaContributionType})`,
+    `Value of Non-registered: $${nonRegisteredSavings.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`,
+    `Non-registered Contributions: $${nonRegisteredContribution.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })} (${nonRegisteredContributionType})`,
+    `Expected Rate of Return: ${(annualRate * 100).toFixed(2)}%`
     ];
     assumptions.forEach((text, index) => {
         doc.text(text, 20, 80 + index * 20);
