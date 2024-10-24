@@ -434,7 +434,7 @@
             actualCashFlowData.push(remainingBalance);
             shortfallData.push(adjustedWithdrawal - remainingBalance);
             surplusData.push(0);
-            remainingBalance = 0;
+            remainingBalance = 0; // Deplete remaining balance
         } else {
             actualCashFlowData.push(adjustedWithdrawal);
             shortfallData.push(0);
@@ -442,20 +442,16 @@
             remainingBalance -= adjustedWithdrawal;
         }
 
+        // Apply growth to the remaining balance after withdrawal
         remainingBalance *= (1 + annualRate);
 
         console.log(`Age ${age}: Withdrawal: ${adjustedWithdrawal.toFixed(2)}, Remaining Balance: ${remainingBalance.toFixed(2)}`);
     }
 
-    // Check for any remaining balance as surplus
+    // At age 100, check if there's any remaining balance and add it as surplus
     if (remainingBalance > 0) {
-        actualCashFlowData.push(remainingBalance);
-        shortfallData.push(0);
-        surplusData.push(remainingBalance);
-    } else {
-        actualCashFlowData.push(0);
-        shortfallData.push(0);
-        surplusData.push(0);
+        actualCashFlowData[actualCashFlowData.length - 1] += remainingBalance; // Add to last withdrawal amount
+        surplusData[surplusData.length - 1] = remainingBalance; // Set surplus for last year
     }
 
     console.log('Actual Cash Flow Data:', actualCashFlowData);
