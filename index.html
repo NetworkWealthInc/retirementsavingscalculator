@@ -410,12 +410,13 @@
 
     function createCashFlowChart(totalValue, retirementAge, annualRate, inflationRate = 0.031) {
     const currentAge = parseInt(document.getElementById('current-age').value);
-    const startingWithdrawal = parseFloat(document.getElementById('desiredCashFlow').value); // Desired cash flow as starting withdrawal
+    const startingWithdrawal = parseFloat(document.getElementById('desiredCashFlow').value);
     const yearsAfterRetirement = 100 - retirementAge;
 
-    const actualCashFlowData = []; // Actual cash flow (withdrawals)
-    const shortfallData = []; // Shortfall data
-    const surplusData = []; // Surplus data
+    const actualCashFlowData = [];
+    const shortfallData = [];
+    const surplusData = [];
+    const maxWithdrawalData = [];
     let remainingBalance = totalValue;
 
     console.log('Current Age:', currentAge);
@@ -426,34 +427,41 @@
     console.log('Inflation Rate:', inflationRate);
     console.log('Starting Withdrawal:', startingWithdrawal);
 
-    // Loop through each year from retirement age to age 100
     for (let age = retirementAge; age <= 100; age++) {
-        // Calculate the adjusted withdrawal for the current year
         const adjustedWithdrawal = startingWithdrawal * Math.pow(1 + inflationRate, age - retirementAge);
         
-        // Check if the remaining balance can cover the withdrawal
+        // Calculate maximum withdrawal based on remaining balance and growth
+        const maxWithdrawal = remainingBalance * (1 - Math.pow(1 + annualRate, -1)); // Ensuring sustainability
+        
+        let actualWithdrawal;
+        let surplus = 0;
+
+        // Determine actual withdrawal
         if (remainingBalance < adjustedWithdrawal) {
-            actualCashFlowData.push(remainingBalance); // Withdraw whatever is left
+            actualWithdrawal = remainingBalance; // Withdraw whatever is left
             shortfallData.push(adjustedWithdrawal - remainingBalance); // Record shortfall
-            surplusData.push(0); // No surplus
-            remainingBalance = 0; // Balance depleted
         } else {
-            actualCashFlowData.push(adjustedWithdrawal); // Full withdrawal
+            actualWithdrawal = adjustedWithdrawal; // Full withdrawal
+            surplus = actualWithdrawal - startingWithdrawal; // Calculate surplus
             shortfallData.push(0); // No shortfall
-            surplusData.push(0); // No surplus
-            remainingBalance -= adjustedWithdrawal; // Deduct withdrawal
         }
 
-        // Apply growth to the remaining balance after withdrawal
+        actualCashFlowData.push(actualWithdrawal);
+        surplusData.push(surplus);
+        maxWithdrawalData.push(maxWithdrawal); // Push max sustainable withdrawal
+
+        // Update remaining balance
+        remainingBalance -= actualWithdrawal;
         remainingBalance *= (1 + annualRate);
 
         // Log for debugging
-        console.log(`Age ${age}: Withdrawal: ${adjustedWithdrawal.toFixed(2)}, Remaining Balance: ${remainingBalance.toFixed(2)}`);
+        console.log(`Age ${age}: Withdrawal: ${actualWithdrawal.toFixed(2)}, Max Withdrawal: ${maxWithdrawal.toFixed(2)}, Remaining Balance: ${remainingBalance.toFixed(2)}`);
     }
 
     console.log('Actual Cash Flow Data:', actualCashFlowData);
     console.log('Shortfall Data:', shortfallData);
     console.log('Surplus Data:', surplusData);
+    console.log('Max Withdrawal Data:', maxWithdrawalData);
 
     const ctx = document.getElementById('cashFlowChart').getContext('2d');
     if (cashFlowChart) cashFlowChart.destroy();
@@ -466,9 +474,14 @@
         data: {
             labels: chartLabels,
             datasets: [{
-                label: 'Actual Pre-tax Income',
+                label: 'Actual Withdrawals',
                 data: actualCashFlowData,
                 backgroundColor: '#40A7DD',
+            },
+            {
+                label: 'Max Sustainable Withdrawal',
+                data: maxWithdrawalData,
+                backgroundColor: 'orange',
             },
             {
                 label: 'Shortfall',
