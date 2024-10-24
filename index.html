@@ -516,7 +516,7 @@
 }
 
        // Function to generate cash flow table
-function generateCashFlowTable(actualCashFlowData, shortfallData, surplusData, currentAge, retirementAge) {
+function generateCashFlowTable(actualCashFlowData, shortfallData, surplusData, retirementAge) {
     const tableBody = document.getElementById('cashFlowTableBody');
     const tableHead = document.getElementById('cashFlowTableHead'); // Assuming thead has this ID
 
@@ -524,20 +524,12 @@ function generateCashFlowTable(actualCashFlowData, shortfallData, surplusData, c
     tableBody.innerHTML = '';
     tableHead.innerHTML = '';
 
-    // Ensure currentAge and retirementAge are parsed as integers
-    currentAge = parseInt(currentAge, 10);
-    retirementAge = parseInt(retirementAge, 10);
-
     // Determine if we need to show Shortfall and Surplus columns
     const hasShortfall = shortfallData.some(value => value > 0);
     const hasSurplus = surplusData.some(value => value > 0);
 
     // Build the table header dynamically based on the columns we need
     const headerRow = document.createElement('tr');
-
-    const yearHeader = document.createElement('th');
-    yearHeader.textContent = 'Year';
-    headerRow.appendChild(yearHeader);
 
     const ageHeader = document.createElement('th');
     ageHeader.textContent = 'Age';
@@ -561,58 +553,37 @@ function generateCashFlowTable(actualCashFlowData, shortfallData, surplusData, c
 
     tableHead.appendChild(headerRow);
 
-    // Utility function to format numbers with commas
-    function formatNumberWithCommas(value) {
-        return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-    }
-
-    // Calculate the starting year based on retirement age and current age
-    const currentYear = new Date().getFullYear();
-    const retirementYear = currentYear + (retirementAge - currentAge);
-
     // Build table rows
     for (let i = 0; i < actualCashFlowData.length; i++) {
-        // Ensure values are parsed as numbers
-        const actualCashFlowValue = parseFloat(actualCashFlowData[i]);
-        const shortfallValue = parseFloat(shortfallData[i]);
-        const surplusValue = parseFloat(surplusData[i]);
-
-        // Avoid NaN values by ensuring proper assignments
-        const year = retirementYear + i;  // Year column
-        const age = retirementAge + i;     // Age column
-
-        // Log values for debugging
-        console.log(`Row ${i}: Year = ${year}, Age = ${age}, Actual Cash Flow = ${actualCashFlowValue.toFixed(2)}, Shortfall = ${shortfallValue.toFixed(2)}, Surplus = ${surplusValue.toFixed(2)}`);
+        const age = retirementAge + i;
+        const actualCashFlow = actualCashFlowData[i].toFixed(2);
+        const shortfall = shortfallData[i].toFixed(2);
+        const surplus = surplusData[i].toFixed(2);
 
         // Create a new row
         const row = document.createElement('tr');
 
-        // Year column
-        const yearCell = document.createElement('td');
-        yearCell.textContent = year; // Should now be a valid number
-        row.appendChild(yearCell);
-
         // Age column
         const ageCell = document.createElement('td');
-        ageCell.textContent = age; // Should now be a valid number
+        ageCell.textContent = age;
         row.appendChild(ageCell);
 
         // Actual Pre-tax Income column
         const actualCashFlowCell = document.createElement('td');
-        actualCashFlowCell.textContent = `$${formatNumberWithCommas(actualCashFlowValue.toFixed(2))}`;
+        actualCashFlowCell.textContent = `$${actualCashFlow}`;
         row.appendChild(actualCashFlowCell);
 
         // Only add Shortfall column if it exists
-        if (hasShortfall && shortfallValue > 0) {
+        if (hasShortfall) {
             const shortfallCell = document.createElement('td');
-            shortfallCell.textContent = `$${formatNumberWithCommas(shortfallValue.toFixed(2))}`;
+            shortfallCell.textContent = `$${shortfall}`;
             row.appendChild(shortfallCell);
         }
 
         // Only add Surplus column if it exists
-        if (hasSurplus && surplusValue > 0) {
+        if (hasSurplus) {
             const surplusCell = document.createElement('td');
-            surplusCell.textContent = `$${formatNumberWithCommas(surplusValue.toFixed(2))}`;
+            surplusCell.textContent = `$${surplus}`;
             row.appendChild(surplusCell);
         }
 
